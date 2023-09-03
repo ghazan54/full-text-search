@@ -1,5 +1,4 @@
 ---
----
 Checks: >
   clang-diagnostic-*,
   clang-analyzer-*,
@@ -17,7 +16,7 @@ Checks: >
   -readability-magic-numbers,
   -cppcoreguidelines-init-variables
 WarningsAsErrors: '*'
-HeaderFilterRegex: ''
+HeaderFilterRegex: 'src/(libsum)'
 AnalyzeTemporaryDtors: false
 FormatStyle:     none
 User:            ghazan
