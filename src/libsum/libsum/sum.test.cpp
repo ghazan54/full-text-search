@@ -1,7 +1,7 @@
 
 #include <gtest/gtest.h>
 
-#include <sum/sum.hpp>
+#include <libsum/sum.hpp>
 
 #include <utility>
 #include <vector>

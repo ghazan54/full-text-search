@@ -1,4 +1,4 @@
-#include <sum/sum.hpp>
+#include <libsum/sum.hpp>
 
 #include <CLI/CLI.hpp>
 
@@ -9,10 +9,10 @@ int main(int argc, char *argv[]) {
         CLI::App app("fts sum");
 
         int firstCount;
-        app.add_option("--first", firstCount, "First count");
+        app.add_option("--first", firstCount, "First count")->required();
 
         int secondCount;
-        app.add_option("--second", secondCount, "Second count");
+        app.add_option("--second", secondCount, "Second count")->required();
 
         CLI11_PARSE(app, argc, argv);
 

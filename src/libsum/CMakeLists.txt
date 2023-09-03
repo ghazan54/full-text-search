@@ -1,8 +1,8 @@
 set(target_name sum)
 
 add_library(${target_name} STATIC
-    sum/sum.cpp
-    sum/sum.hpp)
+    libsum/sum.cpp
+    libsum/sum.hpp)
 
 include(CompileOptions)
 set_compile_options(${target_name})
@@ -18,7 +18,7 @@ include(GoogleTest)
 
 add_executable(
     sum.test
-    sum/sum.test.cpp
+    libsum/sum.test.cpp
 )
 
 target_link_libraries(
@@ -32,3 +32,5 @@ target_include_directories(
     PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}
 )
+
+gtest_discover_tests(sum.test)
