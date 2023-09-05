@@ -13,8 +13,7 @@ Checks: >
   -google-runtime-references,
   -cppcoreguidelines-pro-bounds-pointer-arithmetic,
   -cppcoreguidelines-avoid-magic-number,
-  -readability-magic-numbers,
-  -cppcoreguidelines-init-variables
+  -readability-magic-numbers
 WarningsAsErrors: '*'
 HeaderFilterRegex: 'src/(libsum)'
 AnalyzeTemporaryDtors: false
