@@ -9,7 +9,6 @@ project(
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
-# set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 find_program(CLANG_TIDY_EXE NAMES clang-tidy-14 clang-tidy)
 
 if(NOT CLANG_TIDY_EXE)

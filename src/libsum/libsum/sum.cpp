@@ -1,3 +1,5 @@
 #include <libsum/sum.hpp>
 
-int fts::sum(int countA, int countB) { return countA + countB; }
+namespace fts {
+int sum(int countA, int countB) { return countA + countB; }
+} // namespace fts
