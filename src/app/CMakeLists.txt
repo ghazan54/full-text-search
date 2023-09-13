@@ -15,5 +15,6 @@ target_link_libraries(
     ${target_name}
     PRIVATE
     CLI11
-    sum
+    parser
+    nlohmann_json::nlohmann_json
 )

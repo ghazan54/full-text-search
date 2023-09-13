@@ -1,24 +1,29 @@
-#include <libsum/sum.hpp>
+#include <libparser/parser.hpp>
 
 #include <CLI/CLI.hpp>
+#include <nlohmann/json.hpp>
 
 #include <iostream>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     try {
-        CLI::App app("fts sum");
+        CLI::App app("fts");
 
-        int first_count = 0;
-        app.add_option("--first", first_count, "First count")->required();
-
-        int second_count = 0;
-        app.add_option("--second", second_count, "Second count")->required();
+        std::string config_file("config.json");
+        app.add_option("--config", config_file, "First count");
 
         CLI11_PARSE(app, argc, argv);
 
-        std::cout << fts::sum(first_count, second_count) << '\n';
+        auto conf_args = parser::parse_config(config_file);
+        auto ret = parser::parse_ngram("Dr. Jekyll and Mr. Hyde", conf_args);
 
-    } catch (const std::exception &e) {
+        for (size_t i = 0; i < ret.size(); ++i) {
+            for (size_t j = 0; j < ret[i].size(); ++j) {
+                std::cout << ret[i][j] << ' ' << i << ' ';
+            }
+        }
+        std::cout << '\n';
+    } catch (const std::exception& e) {
         std::cerr << e.what() << '\n';
     }
 
