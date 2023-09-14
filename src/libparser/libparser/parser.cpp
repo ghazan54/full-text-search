@@ -32,19 +32,20 @@ ConfArgs parse_config(const std::string& path) {
     return conf;
 }
 
-static void remove_puncts(std::string& str) {
+namespace {
+
+void remove_puncts(std::string& str) {
     str.erase(std::remove_if(str.begin(), str.end(),
                              [](char chr) -> int { return std::ispunct(chr); }),
               str.end());
 }
 
-static void tolower_str(std::string& str) {
-    std::transform(str.begin(), str.end(), str.begin(), [](const char chr) {
-        return static_cast<char>(tolower(chr));
-    });
+void tolower_str(std::string& str) {
+    std::transform(str.begin(), str.end(), str.begin(),
+                   [](const char chr) { return static_cast<char>(tolower(chr)); });
 }
 
-static void remove_short_words(VecWords& words, size_t min_len) {
+void remove_short_words(VecWords& words, size_t min_len) {
     words.erase(std::remove_if(words.begin(), words.end(),
                                [&min_len](const std::string& str) -> bool {
                                    return str.size() < min_len;
@@ -52,8 +53,8 @@ static void remove_short_words(VecWords& words, size_t min_len) {
                 words.end());
 }
 
-static VecWords remove_stop_words(std::string& str, const VecWords& stop_words,
-                                  size_t min_len_word) {  //? unordered set
+VecWords remove_stop_words(std::string& str, const VecWords& stop_words,
+                           size_t min_len_word) {  //? unordered set
     VecWords words;
     std::string word;
     std::stringstream get_word(str);
@@ -69,6 +70,7 @@ static VecWords remove_stop_words(std::string& str, const VecWords& stop_words,
 
     return words;
 }
+}  // namespace
 
 NgramVec parse_ngram(std::string str, const ConfArgs& args) {
     remove_puncts(str);
