@@ -41,8 +41,9 @@ void remove_puncts(std::string& str) {
 }
 
 void tolower_str(std::string& str) {
-    std::transform(str.begin(), str.end(), str.begin(),
-                   [](const char chr) { return static_cast<char>(tolower(chr)); });
+    std::transform(str.begin(), str.end(), str.begin(), [](const char chr) {
+        return static_cast<char>(tolower(chr));
+    });
 }
 
 void remove_short_words(VecWords& words, size_t min_len) {
