@@ -11,7 +11,7 @@ namespace parser {
 
 using VecWords = std::vector<std::string>;
 
-ConfArgs parse_config(const std::string& path) {
+ConfArgs parse_config(const fspath& path) {
     ConfArgs conf;
     std::ifstream fconf(path);
 
@@ -27,7 +27,7 @@ ConfArgs parse_config(const std::string& path) {
     conf.ngram_max_length = data["fts"]["parser"]["ngram_max_length"];
     std::copy(data["fts"]["parser"]["stop_words"].begin(),
               data["fts"]["parser"]["stop_words"].end(),
-              std::back_inserter(conf.stop_words));
+              std::inserter(conf.stop_words, conf.stop_words.end()));
 
     return conf;
 }
@@ -54,15 +54,14 @@ void remove_short_words(VecWords& words, size_t min_len) {
                 words.end());
 }
 
-VecWords remove_stop_words(std::string& str, const VecWords& stop_words,
-                           size_t min_len_word) {  //? unordered set
+VecWords remove_stop_words(std::string& str, const StopWordsSet& stop_words,
+                           size_t min_len_word) {
     VecWords words;
     std::string word;
     std::stringstream get_word(str);
 
     while (get_word >> word) {
-        if (std::find(stop_words.begin(), stop_words.end(), word) ==
-            stop_words.end()) {
+        if (stop_words.find(word) == stop_words.end()) {
             words.push_back(word);
         }
     }
