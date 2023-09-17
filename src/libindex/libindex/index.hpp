@@ -21,14 +21,23 @@ struct Index {
 
 class IndexWriter {
    public:
-    virtual Index write(const fspath& path) = 0;
+    virtual void write(const fspath& path, const Index& index) = 0;
     virtual ~IndexWriter() = default;
 };
 
 class TextIndexWriter final : public IndexWriter {
    public:
-    Index write(const fspath& path) final;
+    void write(const fspath& path, const Index& index) final;
     ~TextIndexWriter() final = default;
+
+   private:
+    static bool write_forward_index(const fspath& path,
+                                    const ForwardIndex& forward_index);
+    static bool write_reverse_index(const fspath& path,
+                                    const ReverseIndex& reverse_index);
+    static std::string name_to_hash(const std::string& name);
+    static std::string reverse_index_info_to_str(
+        const std::string& term, const std::multimap<size_t, size_t>& idx_info);
 };
 
 class IndexBuilder final {

@@ -277,7 +277,7 @@ CheckOptions:
   - key:             cert-err61-cpp.CheckThrowTemporaries
     value:           'true'
   - key:             cppcoreguidelines-avoid-magic-numbers.IgnoredIntegerValues
-    value:           '1;2;3;4;'
+    value:           '1;2;3;4;5;6'
   - key:             cppcoreguidelines-no-malloc.Allocations
     value:           '::malloc;::calloc'
   - key:             misc-throw-by-value-catch-by-reference.MaxSize

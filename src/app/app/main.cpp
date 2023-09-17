@@ -20,7 +20,8 @@ int main(int argc, char* argv[]) {
         fts::index::IndexBuilder builder(conf_args);
         std::string text;
         size_t doc_id = 0;
-        while ((std::cin >> doc_id) && std::getline(std::cin, text)) {
+        while ((std::cin >> doc_id >> std::ws) &&
+               std::getline(std::cin, text)) {
             builder.add_document(doc_id, text);
         }
         auto index = builder.index();
@@ -33,6 +34,9 @@ int main(int argc, char* argv[]) {
             }
             std::cout << " }\n";
         }
+
+        fts::index::TextIndexWriter writer;
+        writer.write("./", index);
 
     } catch (const std::exception& e) {
         std::cerr << e.what() << '\n';
