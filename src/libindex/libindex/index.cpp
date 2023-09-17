@@ -40,9 +40,9 @@ void create_dir(const fspath& path) {
 }  // namespace
 
 void TextIndexWriter::write(const fspath& path, const Index& index) {
-    fspath index_path = path / "index";
-    fspath forward_index_path = index_path / "docs";
-    fspath reverse_index_path = index_path / "entries";
+    const fspath index_path = path / "index";
+    const fspath forward_index_path = index_path / "docs";
+    const fspath reverse_index_path = index_path / "entries";
 
     create_dir(index_path);
     create_dir(forward_index_path);
