@@ -14,8 +14,9 @@ int main(int argc, char* argv[]) {
 
         CLI11_PARSE(app, argc, argv);
 
-        auto conf_args = parser::parse_config(config_file);
-        auto ret = parser::parse_ngram("Dr. Jekyll and Mr. Hyde", conf_args);
+        auto conf_args = fts::parser::parse_config(config_file);
+        auto ret =
+            fts::parser::parse_ngram("Dr. Jekyll and Mr. Hyde", conf_args);
 
         for (size_t i = 0; i < ret.size(); ++i) {
             for (size_t j = 0; j < ret[i].size(); ++j) {
