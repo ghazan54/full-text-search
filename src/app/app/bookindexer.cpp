@@ -2,7 +2,6 @@
 #include <libparser/parser.hpp>
 
 #include <CLI/CLI.hpp>
-#include <nlohmann/json.hpp>
 
 #include <iostream>
 

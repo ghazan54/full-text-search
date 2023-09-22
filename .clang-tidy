@@ -15,7 +15,7 @@ Checks: >
   -cppcoreguidelines-avoid-magic-number,
   -readability-magic-numbers
 WarningsAsErrors: '*'
-HeaderFilterRegex: 'src/(libparser|libindex)'
+HeaderFilterRegex: 'src/(libparser|libindex|libparser|libindexaccessor|libsearcher)'
 AnalyzeTemporaryDtors: false
 FormatStyle:     none
 User:            ghazan
