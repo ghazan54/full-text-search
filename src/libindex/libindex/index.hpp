@@ -28,7 +28,6 @@ class IndexWriter {
 class TextIndexWriter final : public IndexWriter {
    public:
     void write(const fspath& path, const Index& index) final;
-    ~TextIndexWriter() final = default;
 
    private:
     static bool write_forward_index(const fspath& path,
