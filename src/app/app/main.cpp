@@ -1,3 +1,4 @@
+#include <libindex/index.hpp>
 #include <libparser/parser.hpp>
 
 #include <CLI/CLI.hpp>
@@ -14,15 +15,29 @@ int main(int argc, char* argv[]) {
 
         CLI11_PARSE(app, argc, argv);
 
-        auto conf_args = parser::parse_config(config_file);
-        auto ret = parser::parse_ngram("Dr. Jekyll and Mr. Hyde", conf_args);
+        auto conf_args = fts::parser::parse_config(config_file);
 
-        for (size_t i = 0; i < ret.size(); ++i) {
-            for (size_t j = 0; j < ret[i].size(); ++j) {
-                std::cout << ret[i][j] << ' ' << i << ' ';
-            }
+        fts::index::IndexBuilder builder(conf_args);
+        std::string text;
+        size_t doc_id = 0;
+        while ((std::cin >> doc_id >> std::ws) &&
+               std::getline(std::cin, text)) {
+            builder.add_document(doc_id, text);
         }
-        std::cout << '\n';
+        auto index = builder.index();
+        auto reverse_index = index.entries_;
+
+        for (const auto& [term, info] : reverse_index) {
+            std::cout << term << " { ";
+            for (const auto& [doc_id, pos] : info) {
+                std::cout << doc_id << ": [" << pos << "], ";
+            }
+            std::cout << " }\n";
+        }
+
+        fts::index::TextIndexWriter writer;
+        writer.write("./", index);
+
     } catch (const std::exception& e) {
         std::cerr << e.what() << '\n';
     }

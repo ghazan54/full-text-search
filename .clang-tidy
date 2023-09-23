@@ -15,7 +15,7 @@ Checks: >
   -cppcoreguidelines-avoid-magic-number,
   -readability-magic-numbers
 WarningsAsErrors: '*'
-HeaderFilterRegex: 'src/(libsum)'
+HeaderFilterRegex: 'src/(libparser|libindex)'
 AnalyzeTemporaryDtors: false
 FormatStyle:     none
 User:            ghazan
@@ -277,7 +277,7 @@ CheckOptions:
   - key:             cert-err61-cpp.CheckThrowTemporaries
     value:           'true'
   - key:             cppcoreguidelines-avoid-magic-numbers.IgnoredIntegerValues
-    value:           '1;2;3;4;'
+    value:           '1;2;3;4;5;6'
   - key:             cppcoreguidelines-no-malloc.Allocations
     value:           '::malloc;::calloc'
   - key:             misc-throw-by-value-catch-by-reference.MaxSize
@@ -321,7 +321,7 @@ CheckOptions:
   - key:             readability-suspicious-call-argument.Abbreviation
     value:           'true'
   - key:             cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
-    value:           'false'
+    value:           'true'
   - key:             cert-dcl37-c.AggressiveDependentMemberLookup
     value:           'false'
   - key:             readability-identifier-length.MinimumLoopCounterNameLength
@@ -533,7 +533,7 @@ CheckOptions:
   - key:             cert-dcl51-cpp.Invert
     value:           'false'
   - key:             hicpp-special-member-functions.AllowSoleDefaultDtor
-    value:           'false'
+    value:           'true'
   - key:             cppcoreguidelines-explicit-virtual-functions.IgnoreDestructors
     value:           'false'
   - key:             modernize-make-unique.IgnoreMacros

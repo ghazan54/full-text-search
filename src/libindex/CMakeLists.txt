@@ -1,8 +1,8 @@
-set(target_name sum)
+set(target_name index)
 
 add_library(${target_name} STATIC
-    libsum/sum.cpp
-    libsum/sum.hpp)
+    libindex/index.cpp
+    libindex/index.hpp)
 
 include(CompileOptions)
 set_compile_options(${target_name})
@@ -13,24 +13,32 @@ target_include_directories(
     ${CMAKE_CURRENT_LIST_DIR}
 )
 
+target_link_libraries(
+    ${target_name}
+    PUBLIC
+    parser
+    picosha2
+)
+
 # tests
 include(GoogleTest)
 
 add_executable(
-    sum.test
-    libsum/sum.test.cpp
+    index.test
+    libindex/index.test.cpp
 )
 
 target_link_libraries(
-    sum.test
+    index.test
     GTest::gtest_main
-    sum
+    parser
+    index
 )
 
 target_include_directories(
-    sum.test
+    index.test
     PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}
 )
 
-gtest_discover_tests(sum.test)
+gtest_discover_tests(index.test)
