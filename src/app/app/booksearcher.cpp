@@ -22,14 +22,16 @@ int main(int argc, char* argv[]) {
         // auto info = t_accs.get_term_infos("hello");
 
         std::string query;
+        std::cout << "> ";
         while (std::getline(std::cin, query)) {
-            std::cout << "\033[2J\033[1;1H> ";
+            std::cout << "\033[2J\033[1;1H";
             auto relv = fts::searcher::search(query, t_accs);
 
             for (const auto& [rel, doc_id] : relv) {
                 auto str = t_accs.load_document(doc_id);
                 std::cout << doc_id << ' ' << rel << ' ' << str << '\n';
             }
+            std::cout << "> ";
         }
 
     } catch (const std::exception& e) {

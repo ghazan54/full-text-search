@@ -16,6 +16,10 @@ namespace {
 
 size_t term_frequency(const std::string& term, size_t document_id,
                       index::ReverseIndex& info) {
+    auto term_info = info.find(term);
+    if (term_info == info.end()) {
+        return 0;
+    }
     return info.at(term).count(document_id);
 }
 
@@ -25,6 +29,10 @@ size_t document_frequency(const std::string& term, index::ReverseIndex& info) {
     // std::copy(info.at(term).begin(), info.at(term).end(),
     //           std::inserter(docs, docs.end()));
 
+    auto term_info = info.find(term);
+    if (term_info == info.end()) {
+        return 0;
+    }
     for (const auto& pair : info.at(term)) {
         docs.insert(pair.first);
     }
@@ -41,6 +49,10 @@ std::set<size_t> get_num_docs(index_accessor::IndexAccessor& index_accessor,
             auto info = index_accessor.get_term_infos(term);
             // std::copy(info.at(term).begin(), info.at(term).end(),
             //           std::inserter(docs, docs.end()));
+            auto term_info = info.find(term);
+            if (term_info == info.end()) {
+                continue;
+            }
             for (const auto& pair : info.at(term)) {
                 docs.insert(pair.first);
             }
@@ -58,8 +70,12 @@ double score(parser::NgramVec& ngrams, size_t doc_id,
             auto total_docs = index_accessor.total_docs();
             auto info = index_accessor.get_term_infos(term);
             auto t_freq = term_frequency(term, doc_id, info);
+            auto doc_freq = document_frequency(term, info);
+            if (doc_freq == 0) {
+                continue;
+            }
             auto idf = log(static_cast<double>(total_docs) /
-                           static_cast<double>(document_frequency(term, info)));
+                           static_cast<double>(doc_freq));
             rel += static_cast<double>(t_freq) * idf;
         }
     }
@@ -76,7 +92,7 @@ Results search(const std::string& query,
     auto docs_id = get_num_docs(index_accessor, ngrams);
 
     for (const auto doc_id : docs_id) {
-        double rel = score(ngrams, doc_id, index_accessor);
+        const double rel = score(ngrams, doc_id, index_accessor);
         results.insert(std::make_pair(rel, doc_id));
     }
 
