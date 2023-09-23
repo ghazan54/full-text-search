@@ -25,16 +25,17 @@ void IndexBuilder::add_document(size_t document_id, const std::string& text) {
     }
 }
 
-Index IndexBuilder::index() { return index_; }
+Index IndexBuilder::index() const { return index_; }
 
 namespace {
 
-void create_dir(const fspath& path) {
+bool create_dir(const fspath& path) {
     if (!std::filesystem::exists(path)) {
         if (!std::filesystem::create_directory(path)) {
-            std::cerr << "fts: index: error create dir: " << path << '\n';
+            return false;
         }
     }
+    return true;
 }
 
 }  // namespace
@@ -44,9 +45,10 @@ void TextIndexWriter::write(const fspath& path, const Index& index) {
     const fspath forward_index_path = index_path / "docs";
     const fspath reverse_index_path = index_path / "entries";
 
-    create_dir(index_path);
-    create_dir(forward_index_path);
-    create_dir(reverse_index_path);
+    if (!create_dir(index_path) || !create_dir(forward_index_path) ||
+        !create_dir(reverse_index_path)) {
+        std::cerr << "fts: index: error create dirs" << '\n';
+    }
 
     if (!write_forward_index(forward_index_path, index.docs_)) {
         std::cerr << "fts: index: error print forward index." << '\n';
