@@ -27,7 +27,8 @@ index::ReverseIndex TextIndexAccessor::get_term_infos(const std::string& term) {
         for (size_t j = 0; j < count_pos; ++j) {
             size_t pos = 0;
             entry >> pos;
-            term_info[term].insert(std::make_pair(doc_id, pos));
+            // term_info[term].insert(std::make_pair(doc_id, pos));
+            term_info[term][doc_id].insert(pos);
         }
     }
 

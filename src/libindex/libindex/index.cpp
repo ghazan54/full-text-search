@@ -20,7 +20,8 @@ void IndexBuilder::add_document(size_t document_id, const std::string& text) {
 
     for (size_t i = 0; i < ngrams.size(); ++i) {
         for (const auto& word : ngrams[i]) {
-            index_.entries_[word].insert(std::make_pair(document_id, i));
+            // index_.entries_[word].insert(std::make_pair(document_id, i));
+            index_.entries_[word][document_id].insert(i);
         }
     }
 }
@@ -97,18 +98,12 @@ std::string TextIndexWriter::name_to_hash(const std::string& name) {
 }
 
 std::string TextIndexWriter::reverse_index_info_to_str(
-    const std::string& term, const std::multimap<size_t, size_t>& idx_info) {
-    using DocIdToSetIdxs = std::map<size_t, std::set<size_t>>;
-
-    DocIdToSetIdxs info;
-    for (const auto& [doc_id, pos] : idx_info) {
-        info[doc_id].insert(pos);
-    }
-
+    const std::string& term,
+    const std::map<size_t, std::set<size_t>>& idx_info) {
     std::ostringstream reverse_index_str;
 
-    reverse_index_str << term << ' ' << info.size() << ' ';
-    for (const auto& [doc_id, idxs] : info) {
+    reverse_index_str << term << ' ' << idx_info.size() << ' ';
+    for (const auto& [doc_id, idxs] : idx_info) {
         reverse_index_str << doc_id << ' ' << idxs.size() << ' ';
         for (const auto& idx : idxs) {
             reverse_index_str << idx << ' ';

@@ -20,7 +20,11 @@ size_t term_frequency(const std::string& term, size_t document_id,
     if (term_info == info.end()) {
         return 0;
     }
-    return info.at(term).count(document_id);
+    auto documnet_info = term_info->second.find(document_id);
+    if (documnet_info == term_info->second.end()) {
+        return 0;
+    }
+    return documnet_info->second.size();
 }
 
 size_t document_frequency(const std::string& term, index::ReverseIndex& info) {
