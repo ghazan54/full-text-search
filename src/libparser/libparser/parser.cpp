@@ -90,7 +90,7 @@ NgramVec parse_ngram(std::string str, const ConfArgs& args) {
             ++cnt_ngrams;
         }
     }
-    ngrams.shrink_to_fit();
+
     return ngrams;
 }
 

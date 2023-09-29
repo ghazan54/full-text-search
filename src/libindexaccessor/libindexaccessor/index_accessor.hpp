@@ -25,10 +25,8 @@ class IndexAccessor {
 
 class TextIndexAccessor final : public IndexAccessor {
    public:
-    TextIndexAccessor() = delete;
     TextIndexAccessor(fspath path, parser::ConfArgs conf)
         : path_(std::move(path)), conf_(std::move(conf)) {}
-    ~TextIndexAccessor() override = default;
 
     index::ReverseIndex get_term_infos(const std::string& term) override;
     std::string load_document(size_t document_id) override;
