@@ -24,17 +24,17 @@ int main(int argc, char* argv[]) {
             builder.add_document(doc_id, text);
         }
         auto index = builder.index();
-        auto reverse_index = index.entries_;
+        // auto reverse_index = index.entries_;
 
-        for (const auto& [term, info] : reverse_index) {
-            std::cout << term << " { ";
-            for (const auto& [doc_id, set_pos] : info) {
-                for (const auto& pos : set_pos) {
-                    std::cout << doc_id << ": [" << pos << "], ";
-                }
-            }
-            std::cout << " }\n";
-        }
+        // for (const auto& [term, info] : reverse_index) {
+        //     std::cout << term << " { ";
+        //     for (const auto& [doc_id, set_pos] : info) {
+        //         for (const auto& pos : set_pos) {
+        //             std::cout << doc_id << ": [" << pos << "], ";
+        //         }
+        //     }
+        //     std::cout << " }\n";
+        // }
 
         fts::index::TextIndexWriter writer;
         writer.write("./", index);

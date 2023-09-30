@@ -10,6 +10,15 @@
 #include <cmath>
 #include <iostream>
 
+// #include <chrono>
+
+// template <class result_t = std::chrono::milliseconds,
+//           class clock_t = std::chrono::steady_clock,
+//           class duration_t = std::chrono::milliseconds>
+// auto since(std::chrono::time_point<clock_t, duration_t> const& start) {
+//     return std::chrono::duration_cast<result_t>(clock_t::now() - start);
+// }
+
 namespace fts::searcher {
 
 namespace {
@@ -95,10 +104,12 @@ Results search(const std::string& query,
     auto ngrams = parser::parse_ngram(query, index_accessor.config());
     auto docs_id = get_num_docs(index_accessor, ngrams);
 
+    // auto start = std::chrono::steady_clock::now();
     for (const auto doc_id : docs_id) {
         const double rel = score(ngrams, doc_id, index_accessor);
         results.insert(std::make_pair(rel, doc_id));
     }
+    // std::cout << "score time: " << since(start).count() << '\n';
 
     return results;
 }
