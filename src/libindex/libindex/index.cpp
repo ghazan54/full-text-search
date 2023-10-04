@@ -21,9 +21,10 @@ void IndexBuilder::add_document(size_t document_id, const std::string& text) {
     for (size_t i = 0; i < ngrams.size(); ++i) {
         for (const auto& word : ngrams[i]) {
             // index_.entries_[word].insert(std::make_pair(document_id, i));
-            index_.entries_[word][document_id].insert(i);
+            index_.entries_[word][document_id].push_back(i);
         }
     }
+    ++index_.num_docs_;
 }
 
 Index IndexBuilder::index() const { return index_; }
@@ -58,6 +59,9 @@ void TextIndexWriter::write(const fspath& path, const Index& index) {
     if (!write_reverse_index(reverse_index_path, index.entries_)) {
         std::cerr << "fts: index: error print reverse index." << '\n';
     }
+
+    std::ofstream total(path / "index" / "total");
+    total << index.num_docs_;
 }
 
 bool TextIndexWriter::write_forward_index(const fspath& path,
@@ -99,7 +103,7 @@ std::string TextIndexWriter::name_to_hash(const std::string& name) {
 
 std::string TextIndexWriter::reverse_index_info_to_str(
     const std::string& term,
-    const std::map<size_t, std::set<size_t>>& idx_info) {
+    const std::map<size_t, std::vector<size_t>>& idx_info) {
     std::ostringstream reverse_index_str;
 
     reverse_index_str << term << ' ' << idx_info.size() << ' ';

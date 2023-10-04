@@ -50,10 +50,15 @@ TEST(index_accessor_load_document_test, empty_dir) {
     fts::index_accessor::TextIndexAccessor accessor("non-existent directory",
                                                     conf);
 
-    auto result = accessor.load_document(199903);
-    std::string exp_result("");
+    bool result = false;
 
-    ASSERT_EQ(exp_result, result);
+    try {
+        accessor.load_document(199903);
+    } catch (const std::exception& e) {
+        result = true;
+    }
+
+    ASSERT_TRUE(result);
 }
 
 TEST(index_accessor_total_docs_test, normal_case) {
@@ -111,10 +116,17 @@ TEST(index_accessor_get_term_infos_test, normal_case) {
 TEST(index_accessor_get_term_infos_test, empty_dir) {
     fts::index_accessor::TextIndexAccessor accessor("non-existent directory",
                                                     conf);
-    auto result = accessor.get_term_infos("matrix");
-    fts::index::ReverseIndex exp_result = {};
 
-    ASSERT_EQ(exp_result, result);
+    bool result = false;
+
+    try {
+        accessor.get_term_infos("matrix");
+
+    } catch (const std::exception& e) {
+        result = true;
+    }
+
+    ASSERT_TRUE(result);
 }
 
 int main(int argc, char** argv) {

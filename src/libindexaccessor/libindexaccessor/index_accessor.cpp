@@ -9,14 +9,25 @@
 namespace fts::index_accessor {
 
 index::ReverseIndex TextIndexAccessor::get_term_infos(const std::string& term) {
-    std::ifstream entry(path_ / "index/entries" /
-                        index::TextIndexWriter::name_to_hash(term));
-
+    std::string path(path_ / "index/entries" /
+                     index::TextIndexWriter::name_to_hash(term));
+    std::ifstream entry_file(path);
     index::ReverseIndex term_info;
+
+    if (!entry_file.is_open()) {
+        return term_info;
+    }
+
+    std::string line;
+    std::getline(entry_file, line);
+
+    std::istringstream entry(line);
+
     {
         std::string word;
         entry >> word;
     }
+
     size_t count_entries = 0;
     entry >> count_entries;
     for (size_t i = 0; i < count_entries; ++i) {
@@ -27,8 +38,7 @@ index::ReverseIndex TextIndexAccessor::get_term_infos(const std::string& term) {
         for (size_t j = 0; j < count_pos; ++j) {
             size_t pos = 0;
             entry >> pos;
-            // term_info[term].insert(std::make_pair(doc_id, pos));
-            term_info[term][doc_id].insert(pos);
+            term_info[term][doc_id].push_back(pos);
         }
     }
 
@@ -36,7 +46,13 @@ index::ReverseIndex TextIndexAccessor::get_term_infos(const std::string& term) {
 }
 
 std::string TextIndexAccessor::load_document(size_t document_id) {
-    std::ifstream document(path_ / "index/docs" / std::to_string(document_id));
+    std::string path(path_ / "index" / "docs" / std::to_string(document_id));
+    std::ifstream document(path);
+
+    if (!document.is_open()) {
+        throw std::ios_base::failure("Could not open the file " + path);
+    }
+
     std::string text;
 
     std::getline(document, text);
@@ -47,14 +63,15 @@ std::string TextIndexAccessor::load_document(size_t document_id) {
 }
 
 size_t TextIndexAccessor::total_docs() {
-    auto dir_iter = std::filesystem::directory_iterator(path_ / "index/docs");
-
     size_t total = 0;
-    for (const auto& entry : dir_iter) {
-        if (entry.is_regular_file()) {
-            ++total;
-        }
+    std::string path(path_ / "index" / "total");
+    std::ifstream ttl(path);
+
+    if (!ttl.is_open()) {
+        throw std::ios_base::failure("Could not open the file " + path);
     }
+
+    ttl >> total;
 
     return total;
 }

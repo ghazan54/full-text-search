@@ -10,13 +10,15 @@
 namespace fts::index {
 
 using ForwardIndex = std::map<size_t, std::string>;
-using ReverseIndex = std::map<std::string, std::map<size_t, std::set<size_t>>>;
+using ReverseIndex =
+    std::map<std::string, std::map<size_t, std::vector<size_t>>>;
 
 using fspath = std::filesystem::path;
 
 struct Index {
     ForwardIndex docs_;
     ReverseIndex entries_;
+    size_t num_docs_ = 0;
 };
 
 class IndexWriter {
@@ -37,7 +39,7 @@ class TextIndexWriter final : public IndexWriter {
                                     const ReverseIndex& reverse_index);
     static std::string reverse_index_info_to_str(
         const std::string& term,
-        const std::map<size_t, std::set<size_t>>& idx_info);
+        const std::map<size_t, std::vector<size_t>>& idx_info);
 };
 
 class IndexBuilder final {

@@ -10,14 +10,14 @@
 #include <cmath>
 #include <iostream>
 
-// #include <chrono>
+#include <chrono>
 
-// template <class result_t = std::chrono::milliseconds,
-//           class clock_t = std::chrono::steady_clock,
-//           class duration_t = std::chrono::milliseconds>
-// auto since(std::chrono::time_point<clock_t, duration_t> const& start) {
-//     return std::chrono::duration_cast<result_t>(clock_t::now() - start);
-// }
+template <class result_t = std::chrono::milliseconds,
+          class clock_t = std::chrono::steady_clock,
+          class duration_t = std::chrono::milliseconds>
+auto since(std::chrono::time_point<clock_t, duration_t> const& start) {
+    return std::chrono::duration_cast<result_t>(clock_t::now() - start);
+}
 
 namespace fts::searcher {
 
@@ -39,9 +39,6 @@ size_t term_frequency(const std::string& term, size_t document_id,
 size_t document_frequency(const std::string& term, index::ReverseIndex& info) {
     std::set<size_t> docs;
 
-    // std::copy(info.at(term).begin(), info.at(term).end(),
-    //           std::inserter(docs, docs.end()));
-
     auto term_info = info.find(term);
     if (term_info == info.end()) {
         return 0;
@@ -60,8 +57,6 @@ std::set<size_t> get_num_docs(index_accessor::IndexAccessor& index_accessor,
     for (const auto& ngram : ngrams) {
         for (const auto& term : ngram) {
             auto info = index_accessor.get_term_infos(term);
-            // std::copy(info.at(term).begin(), info.at(term).end(),
-            //           std::inserter(docs, docs.end()));
             auto term_info = info.find(term);
             if (term_info == info.end()) {
                 continue;
@@ -99,17 +94,22 @@ double score(parser::NgramVec& ngrams, size_t doc_id,
 
 Results search(const std::string& query,
                index_accessor::IndexAccessor& index_accessor) {
-    Results results([](double key1, double key2) { return key1 > key2; });
+    Results results;
 
     auto ngrams = parser::parse_ngram(query, index_accessor.config());
     auto docs_id = get_num_docs(index_accessor, ngrams);
 
-    // auto start = std::chrono::steady_clock::now();
+    auto start = std::chrono::steady_clock::now();
     for (const auto doc_id : docs_id) {
         const double rel = score(ngrams, doc_id, index_accessor);
-        results.insert(std::make_pair(rel, doc_id));
+        results.push_back(std::make_pair(doc_id, rel));
     }
-    // std::cout << "score time: " << since(start).count() << '\n';
+    std::sort(results.begin(), results.end(),
+              [](const std::pair<size_t, double> item1,
+                 const std::pair<size_t, double> item2) {
+                  return item1.second > item2.second;
+              });
+    std::cout << "score time: " << since(start).count() << '\n';
 
     return results;
 }

@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
 
         auto relv = fts::searcher::search(query, t_accs);
 
-        for (const auto& [rel, doc_id] : relv) {
+        for (const auto& [doc_id, rel] : relv) {
             auto str = t_accs.load_document(doc_id);
             std::cout << doc_id << ' ' << rel << ' ' << str << '\n';
         }
