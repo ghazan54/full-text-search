@@ -84,12 +84,13 @@ bool TextIndexWriter::write_forward_index(const fspath& path,
 bool TextIndexWriter::write_reverse_index(const fspath& path,
                                           const ReverseIndex& reverse_index) {
     for (const auto& [term, info] : reverse_index) {
-        std::ofstream out_file(path / name_to_hash(term));
+        std::ofstream out_file;
+        out_file.open(path / name_to_hash(term), std::ios_base::app);
         if (!out_file.is_open()) {
             return false;
         }
 
-        out_file << reverse_index_info_to_str(term, info);
+        out_file << reverse_index_info_to_str(term, info) << '\n';
 
         out_file.close();
     }
