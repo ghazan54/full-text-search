@@ -12,8 +12,6 @@
 
 namespace fts::searcher {
 
-// using Results =
-//     std::multimap<double, size_t, std::function<bool(double, double)>>;
 using Results = std::vector<std::pair<size_t, double>>;
 
 Results search(const std::string& query,

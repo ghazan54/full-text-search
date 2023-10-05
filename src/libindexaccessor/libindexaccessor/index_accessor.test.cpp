@@ -116,17 +116,10 @@ TEST(index_accessor_get_term_infos_test, normal_case) {
 TEST(index_accessor_get_term_infos_test, empty_dir) {
     fts::index_accessor::TextIndexAccessor accessor("non-existent directory",
                                                     conf);
+    auto result = accessor.get_term_infos("matrix");
+    fts::index::ReverseIndex exp_result = {};
 
-    bool result = false;
-
-    try {
-        accessor.get_term_infos("matrix");
-
-    } catch (const std::exception& e) {
-        result = true;
-    }
-
-    ASSERT_TRUE(result);
+    ASSERT_EQ(exp_result, result);
 }
 
 int main(int argc, char** argv) {
