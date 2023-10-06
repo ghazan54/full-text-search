@@ -21,24 +21,4 @@ target_link_libraries(
     index_accessor
 )
 
-# tests
-include(GoogleTest)
-
-add_executable(
-    searcher.test
-    libsearcher/searcher.test.cpp
-)
-
-target_link_libraries(
-    searcher.test
-    GTest::gtest_main
-    searcher
-)
-
-target_include_directories(
-    searcher.test
-    PUBLIC
-    ${CMAKE_CURRENT_LIST_DIR}
-)
-
-gtest_discover_tests(searcher.test)
+create_test(searcher.test libsearcher/searcher.test.cpp searcher)

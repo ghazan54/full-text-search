@@ -21,3 +21,28 @@ function(set_compile_options target_name)
         )
     endif()
 endfunction()
+
+function(create_test test_name source_files)
+    include(GoogleTest)
+
+    add_executable(
+        ${test_name}
+        ${source_files}
+    )
+
+    set_compile_options(${test_name})
+
+    target_link_libraries(
+        ${test_name}
+        GTest::gtest_main
+        ${ARGN}
+    )
+
+    target_include_directories(
+        ${test_name}
+        PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}
+    )
+
+    gtest_discover_tests(${test_name})
+endfunction()

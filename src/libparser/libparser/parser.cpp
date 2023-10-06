@@ -23,11 +23,25 @@ ConfArgs parse_config(const fspath& path) {
     fconf >> data;
     fconf.close();
 
-    conf.ngram_min_length_ = data["fts"]["parser"]["ngram_min_length"];
-    conf.ngram_max_length_ = data["fts"]["parser"]["ngram_max_length"];
-    std::copy(data["fts"]["parser"]["stop_words"].begin(),
-              data["fts"]["parser"]["stop_words"].end(),
-              std::inserter(conf.stop_words_, conf.stop_words_.end()));
+    try {
+        conf.ngram_min_length_ = data["fts"]["parser"]["ngram_min_length"];
+        conf.ngram_max_length_ = data["fts"]["parser"]["ngram_max_length"];
+        std::copy(data["fts"]["parser"]["stop_words"].begin(),
+                  data["fts"]["parser"]["stop_words"].end(),
+                  std::inserter(conf.stop_words_, conf.stop_words_.end()));
+    } catch (const std::exception& e) {
+        conf.ngram_min_length_ = 3;
+        conf.ngram_max_length_ = 6;
+        conf.stop_words_ = {};
+        std::cerr << "parse_config: error when reading the config, default "
+                     "values are used\n";
+    }
+
+    if (conf.ngram_min_length_ > conf.ngram_max_length_) {
+        throw std::runtime_error(
+            "parse_config: the minimum term length cannot be greater than the "
+            "maximum");
+    }
 
     return conf;
 }

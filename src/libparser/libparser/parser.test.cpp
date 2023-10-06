@@ -26,7 +26,7 @@ TEST(parse_ngram_test, empty_text) {
     args.ngram_min_length_ = 3;
     args.ngram_max_length_ = 6;
 
-    std::string str = "";
+    std::string str;
 
     fts::parser::NgramVec expected_result = {};
 

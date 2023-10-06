@@ -6,18 +6,18 @@
 
 #include <cmath>
 
-fts::parser::ConfArgs conf = {
-    .stop_words_ = {"a",     "an",   "and",  "are", "as",    "at",   "be",
-                    "but",   "by",   "for",  "if",  "in",    "into", "is",
-                    "it",    "no",   "not",  "of",  "on",    "or",   "s",
-                    "such",  "t",    "that", "the", "their", "then", "there",
-                    "these", "they", "this", "to",  "was",   "will", "with"},
-    .ngram_min_length_ = 3,
-    .ngram_max_length_ = 6,
-};
-
 static void rm_and_new_index(
     const std::unordered_map<size_t, std::string>& idx) {
+    const fts::parser::ConfArgs conf = {
+        {"a",     "an",   "and",  "are", "as",    "at",   "be",
+         "but",   "by",   "for",  "if",  "in",    "into", "is",
+         "it",    "no",   "not",  "of",  "on",    "or",   "s",
+         "such",  "t",    "that", "the", "their", "then", "there",
+         "these", "they", "this", "to",  "was",   "will", "with"},
+        3,  // ngram_min_length_
+        6   // ngram_max_length_
+    };
+
     std::filesystem::remove_all("index/");
     fts::index::IndexBuilder builder(conf);
 
@@ -34,6 +34,16 @@ double accuracy(double num, double eps = 5) {
 }
 
 TEST(search_test, normal_case) {
+    const fts::parser::ConfArgs conf = {
+        {"a",     "an",   "and",  "are", "as",    "at",   "be",
+         "but",   "by",   "for",  "if",  "in",    "into", "is",
+         "it",    "no",   "not",  "of",  "on",    "or",   "s",
+         "such",  "t",    "that", "the", "their", "then", "there",
+         "these", "they", "this", "to",  "was",   "will", "with"},
+        3,  // ngram_min_length_
+        6   // ngram_max_length_
+    };
+
     fts::index_accessor::TextIndexAccessor t_accs("./", conf);
     auto result = fts::searcher::search("bye earth", t_accs);
     fts::searcher::Results exp_result({{102, 3.29584}, {101, 1.09861}});
@@ -47,6 +57,16 @@ TEST(search_test, normal_case) {
 }
 
 TEST(search_test, one_word) {
+    const fts::parser::ConfArgs conf = {
+        {"a",     "an",   "and",  "are", "as",    "at",   "be",
+         "but",   "by",   "for",  "if",  "in",    "into", "is",
+         "it",    "no",   "not",  "of",  "on",    "or",   "s",
+         "such",  "t",    "that", "the", "their", "then", "there",
+         "these", "they", "this", "to",  "was",   "will", "with"},
+        3,  // ngram_min_length_
+        6   // ngram_max_length_
+    };
+
     fts::index_accessor::TextIndexAccessor t_accs("./", conf);
     auto result = fts::searcher::search("hello", t_accs);
     fts::searcher::Results exp_result({{100, 1.2164}, {102, 1.2164}});
@@ -60,6 +80,16 @@ TEST(search_test, one_word) {
 }
 
 TEST(search_test, empty_query) {
+    const fts::parser::ConfArgs conf = {
+        {"a",     "an",   "and",  "are", "as",    "at",   "be",
+         "but",   "by",   "for",  "if",  "in",    "into", "is",
+         "it",    "no",   "not",  "of",  "on",    "or",   "s",
+         "such",  "t",    "that", "the", "their", "then", "there",
+         "these", "they", "this", "to",  "was",   "will", "with"},
+        3,  // ngram_min_length_
+        6   // ngram_max_length_
+    };
+
     fts::index_accessor::TextIndexAccessor t_accs("./", conf);
     auto result = fts::searcher::search("", t_accs);
     fts::searcher::Results exp_result{};

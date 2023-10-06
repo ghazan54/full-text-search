@@ -20,24 +20,4 @@ target_link_libraries(
     index
 )
 
-# tests
-include(GoogleTest)
-
-add_executable(
-    index_accessor.test
-    libindexaccessor/index_accessor.test.cpp
-)
-
-target_link_libraries(
-    index_accessor.test
-    GTest::gtest_main
-    index_accessor
-)
-
-target_include_directories(
-    index_accessor.test
-    PUBLIC
-    ${CMAKE_CURRENT_LIST_DIR}
-)
-
-gtest_discover_tests(index_accessor.test)
+create_test(index_accessor.test libindexaccessor/index_accessor.test.cpp index_accessor)

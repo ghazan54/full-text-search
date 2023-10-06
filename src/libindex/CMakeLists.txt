@@ -20,25 +20,4 @@ target_link_libraries(
     picosha2
 )
 
-# tests
-include(GoogleTest)
-
-add_executable(
-    index.test
-    libindex/index.test.cpp
-)
-
-target_link_libraries(
-    index.test
-    GTest::gtest_main
-    parser
-    index
-)
-
-target_include_directories(
-    index.test
-    PUBLIC
-    ${CMAKE_CURRENT_LIST_DIR}
-)
-
-gtest_discover_tests(index.test)
+create_test(index.test libindex/index.test.cpp parser index)

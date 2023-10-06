@@ -3,17 +3,17 @@
 
 #include <gtest/gtest.h>
 
-fts::parser::ConfArgs conf = {
-    .stop_words_ = {"a",     "an",   "and",  "are", "as",    "at",   "be",
-                    "but",   "by",   "for",  "if",  "in",    "into", "is",
-                    "it",    "no",   "not",  "of",  "on",    "or",   "s",
-                    "such",  "t",    "that", "the", "their", "then", "there",
-                    "these", "they", "this", "to",  "was",   "will", "with"},
-    .ngram_min_length_ = 3,
-    .ngram_max_length_ = 6,
-};
-
 TEST(index_builder_test, normal_case) {
+    const fts::parser::ConfArgs conf = {
+        {"a",     "an",   "and",  "are", "as",    "at",   "be",
+         "but",   "by",   "for",  "if",  "in",    "into", "is",
+         "it",    "no",   "not",  "of",  "on",    "or",   "s",
+         "such",  "t",    "that", "the", "their", "then", "there",
+         "these", "they", "this", "to",  "was",   "will", "with"},
+        3,  // ngram_min_length_
+        6   // ngram_max_length_
+    };
+
     fts::index::Index index_exp;
     fts::index::IndexBuilder builder{conf};
 
@@ -47,6 +47,16 @@ TEST(index_builder_test, normal_case) {
 }
 
 TEST(index_builder_test, empty_documents) {
+    const fts::parser::ConfArgs conf = {
+        {"a",     "an",   "and",  "are", "as",    "at",   "be",
+         "but",   "by",   "for",  "if",  "in",    "into", "is",
+         "it",    "no",   "not",  "of",  "on",    "or",   "s",
+         "such",  "t",    "that", "the", "their", "then", "there",
+         "these", "they", "this", "to",  "was",   "will", "with"},
+        3,  // ngram_min_length_
+        6   // ngram_max_length_
+    };
+
     fts::index::Index index_exp;
     fts::index::IndexBuilder builder{conf};
 
@@ -62,6 +72,16 @@ TEST(index_builder_test, empty_documents) {
 }
 
 TEST(index_builder_test, only_stop_words) {
+    const fts::parser::ConfArgs conf = {
+        {"a",     "an",   "and",  "are", "as",    "at",   "be",
+         "but",   "by",   "for",  "if",  "in",    "into", "is",
+         "it",    "no",   "not",  "of",  "on",    "or",   "s",
+         "such",  "t",    "that", "the", "their", "then", "there",
+         "these", "they", "this", "to",  "was",   "will", "with"},
+        3,  // ngram_min_length_
+        6   // ngram_max_length_
+    };
+
     fts::index::Index index_exp;
     fts::index::IndexBuilder builder{conf};
 
@@ -81,6 +101,16 @@ TEST(index_builder_test, only_stop_words) {
 }
 
 TEST(index_builder_test, repeat_word) {
+    const fts::parser::ConfArgs conf = {
+        {"a",     "an",   "and",  "are", "as",    "at",   "be",
+         "but",   "by",   "for",  "if",  "in",    "into", "is",
+         "it",    "no",   "not",  "of",  "on",    "or",   "s",
+         "such",  "t",    "that", "the", "their", "then", "there",
+         "these", "they", "this", "to",  "was",   "will", "with"},
+        3,  // ngram_min_length_
+        6   // ngram_max_length_
+    };
+
     fts::index::Index index_exp;
     fts::index::IndexBuilder builder{conf};
 
