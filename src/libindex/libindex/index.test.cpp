@@ -58,7 +58,7 @@ TEST(index_builder_test, empty_documents) {
     };
 
     fts::index::Index index_exp;
-    fts::index::IndexBuilder builder{conf};
+    const fts::index::IndexBuilder builder{conf};
 
     index_exp.docs_ = {};
 

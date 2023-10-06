@@ -3,8 +3,8 @@
 
 #include <gtest/gtest.h>
 
-static void rm_and_new_index(
-    const std::unordered_map<size_t, std::string>& idx) {
+namespace {
+void rm_and_new_index(const std::unordered_map<size_t, std::string>& idx) {
     const fts::parser::ConfArgs conf = {
         {"a",     "an",   "and",  "are", "as",    "at",   "be",
          "but",   "by",   "for",  "if",  "in",    "into", "is",
@@ -24,6 +24,7 @@ static void rm_and_new_index(
     fts::index::TextIndexWriter writer;
     writer.write("./", builder.index());
 }
+}  // namespace
 
 TEST(index_accessor_load_document_test, normal_case) {
     const fts::parser::ConfArgs conf = {
@@ -38,19 +39,19 @@ TEST(index_accessor_load_document_test, normal_case) {
 
     fts::index_accessor::TextIndexAccessor accessor("./", conf);
     {
-        auto result = accessor.load_document(199903);
-        std::string exp_result("The Matrix");
+        const auto result = accessor.load_document(199903);
+        const std::string exp_result("The Matrix");
         ASSERT_EQ(exp_result, result);
     }
     {
-        auto result = accessor.load_document(200305);
-        std::string exp_result("The Matrix Reloaded");
+        const auto result = accessor.load_document(200305);
+        const std::string exp_result("The Matrix Reloaded");
         ASSERT_EQ(exp_result, result);
     }
 
     {
-        auto result = accessor.load_document(200311);
-        std::string exp_result("The Matrix Revolutions");
+        const auto result = accessor.load_document(200311);
+        const std::string exp_result("The Matrix Revolutions");
         ASSERT_EQ(exp_result, result);
     }
 }
@@ -92,8 +93,8 @@ TEST(index_accessor_total_docs_test, normal_case) {
     };
 
     fts::index_accessor::TextIndexAccessor accessor("./", conf);
-    auto result = accessor.total_docs();
-    size_t exp_result = 3;
+    const auto result = accessor.total_docs();
+    const size_t exp_result = 3;
 
     ASSERT_EQ(exp_result, result);
 }
@@ -136,7 +137,7 @@ TEST(index_accessor_config_test, normal_case) {
     };
 
     fts::index_accessor::TextIndexAccessor accessor("./", conf);
-    auto result = accessor.config();
+    const auto result = accessor.config();
 
     ASSERT_EQ(conf.ngram_min_length_, result.ngram_min_length_);
     ASSERT_EQ(conf.ngram_max_length_, result.ngram_max_length_);
@@ -156,7 +157,7 @@ TEST(index_accessor_config_test, empty_dir) {
 
     fts::index_accessor::TextIndexAccessor accessor("non-existent directory",
                                                     conf);
-    auto result = accessor.config();
+    const auto result = accessor.config();
 
     ASSERT_EQ(conf.ngram_min_length_, result.ngram_min_length_);
     ASSERT_EQ(conf.ngram_max_length_, result.ngram_max_length_);
@@ -175,8 +176,8 @@ TEST(index_accessor_get_term_infos_test, normal_case) {
     };
 
     fts::index_accessor::TextIndexAccessor accessor("./", conf);
-    auto result = accessor.get_term_infos("matrix");
-    fts::index::ReverseIndex exp_result = {
+    const auto result = accessor.get_term_infos("matrix");
+    const fts::index::ReverseIndex exp_result = {
         {"matrix", {{199903, {0}}, {200305, {0}}, {200311, {0}}}}};
 
     ASSERT_EQ(exp_result, result);
@@ -195,8 +196,8 @@ TEST(index_accessor_get_term_infos_test, empty_dir) {
 
     fts::index_accessor::TextIndexAccessor accessor("non-existent directory",
                                                     conf);
-    auto result = accessor.get_term_infos("matrix");
-    fts::index::ReverseIndex exp_result = {};
+    const auto result = accessor.get_term_infos("matrix");
+    const fts::index::ReverseIndex exp_result = {};
 
     ASSERT_EQ(exp_result, result);
 }
@@ -207,7 +208,7 @@ int main(int argc, char** argv) {
     rm_and_new_index({{199903, "The Matrix"},
                       {200305, "The Matrix Reloaded"},
                       {200311, "The Matrix Revolutions"}});
-    int ret = RUN_ALL_TESTS();
+    const int ret = RUN_ALL_TESTS();
     std::filesystem::remove_all("index/");
 
     return ret;

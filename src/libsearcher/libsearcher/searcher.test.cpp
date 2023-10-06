@@ -6,8 +6,8 @@
 
 #include <cmath>
 
-static void rm_and_new_index(
-    const std::unordered_map<size_t, std::string>& idx) {
+namespace {
+void rm_and_new_index(const std::unordered_map<size_t, std::string>& idx) {
     const fts::parser::ConfArgs conf = {
         {"a",     "an",   "and",  "are", "as",    "at",   "be",
          "but",   "by",   "for",  "if",  "in",    "into", "is",
@@ -28,6 +28,7 @@ static void rm_and_new_index(
     fts::index::TextIndexWriter writer;
     writer.write("./", builder.index());
 }
+}  // namespace
 
 double accuracy(double num, double eps = 5) {
     return round(num * pow(10, eps)) / pow(10, eps);
@@ -107,7 +108,7 @@ int main(int argc, char** argv) {
 
     rm_and_new_index(
         {{100, "Hello World"}, {101, "Bye World"}, {102, "Hello Earth"}});
-    int ret = RUN_ALL_TESTS();
+    const int ret = RUN_ALL_TESTS();
     std::filesystem::remove_all("index/");
 
     return ret;
