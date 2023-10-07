@@ -23,13 +23,13 @@ struct Index {
 
 class IndexWriter {
    public:
-    virtual void write(const fspath& path, const Index& index) = 0;
+    virtual void write(const fspath& path, const Index& index) const = 0;
     virtual ~IndexWriter() = default;
 };
 
 class TextIndexWriter final : public IndexWriter {
    public:
-    void write(const fspath& path, const Index& index) final;
+    void write(const fspath& path, const Index& index) const final;
     static std::string name_to_hash(const std::string& name);
 
    private:

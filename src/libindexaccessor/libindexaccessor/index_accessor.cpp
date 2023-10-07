@@ -66,7 +66,7 @@ std::string TextIndexAccessor::load_document(size_t document_id) {
     return text;
 }
 
-size_t TextIndexAccessor::total_docs() {
+size_t TextIndexAccessor::total_docs() const {
     size_t total = 0;
     const std::string path(path_ / "index" / "total");
     std::ifstream ttl(path);
@@ -80,6 +80,6 @@ size_t TextIndexAccessor::total_docs() {
     return total;
 }
 
-parser::ConfArgs TextIndexAccessor::config() { return conf_; }
+parser::ConfArgs TextIndexAccessor::config() const { return conf_; }
 
 }  // namespace fts::index_accessor
