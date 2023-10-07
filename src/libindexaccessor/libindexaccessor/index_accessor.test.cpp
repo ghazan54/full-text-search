@@ -21,7 +21,7 @@ void rm_and_new_index(const std::unordered_map<size_t, std::string>& idx) {
         builder.add_document(doc_id, text);
     }
 
-    fts::index::TextIndexWriter writer;
+    const fts::index::TextIndexWriter writer;
     writer.write("./", builder.index());
 }
 }  // namespace
@@ -92,7 +92,7 @@ TEST(index_accessor_total_docs_test, normal_case) {
         6   // ngram_max_length_
     };
 
-    fts::index_accessor::TextIndexAccessor accessor("./", conf);
+    const fts::index_accessor::TextIndexAccessor accessor("./", conf);
     const auto result = accessor.total_docs();
     const size_t exp_result = 3;
 
@@ -110,8 +110,8 @@ TEST(index_accessor_total_docs_test, empty_dir) {
         6   // ngram_max_length_
     };
 
-    fts::index_accessor::TextIndexAccessor accessor("non-existent directory",
-                                                    conf);
+    const fts::index_accessor::TextIndexAccessor accessor(
+        "non-existent directory", conf);
 
     bool result = false;
 
@@ -136,7 +136,7 @@ TEST(index_accessor_config_test, normal_case) {
         6   // ngram_max_length_
     };
 
-    fts::index_accessor::TextIndexAccessor accessor("./", conf);
+    const fts::index_accessor::TextIndexAccessor accessor("./", conf);
     const auto result = accessor.config();
 
     ASSERT_EQ(conf.ngram_min_length_, result.ngram_min_length_);
@@ -155,8 +155,8 @@ TEST(index_accessor_config_test, empty_dir) {
         6   // ngram_max_length_
     };
 
-    fts::index_accessor::TextIndexAccessor accessor("non-existent directory",
-                                                    conf);
+    const fts::index_accessor::TextIndexAccessor accessor(
+        "non-existent directory", conf);
     const auto result = accessor.config();
 
     ASSERT_EQ(conf.ngram_min_length_, result.ngram_min_length_);

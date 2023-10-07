@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
         //     std::cout << " }\n";
         // }
 
-        fts::index::TextIndexWriter writer;
+        const fts::index::TextIndexWriter writer;
         writer.write("./", index);
 
     } catch (const std::exception& e) {

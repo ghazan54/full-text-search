@@ -25,7 +25,7 @@ void rm_and_new_index(const std::unordered_map<size_t, std::string>& idx) {
         builder.add_document(doc_id, text);
     }
 
-    fts::index::TextIndexWriter writer;
+    const fts::index::TextIndexWriter writer;
     writer.write("./", builder.index());
 }
 }  // namespace
