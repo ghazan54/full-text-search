@@ -26,7 +26,7 @@ index::ReverseIndex TextIndexAccessor::get_term_infos(const std::string& term) {
             std::string word;
             entry >> word;
             if (term != word) {
-                break;
+                continue;
             }
         }
 
