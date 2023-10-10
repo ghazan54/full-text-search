@@ -19,25 +19,4 @@ target_link_libraries(
     nlohmann_json::nlohmann_json
 )
 
-# tests
-include(GoogleTest)
-
-add_executable(
-    parser.test
-    libparser/parser.test.cpp
-)
-
-target_link_libraries(
-    parser.test
-    GTest::gtest_main
-    nlohmann_json::nlohmann_json
-    parser
-)
-
-target_include_directories(
-    parser.test
-    PUBLIC
-    ${CMAKE_CURRENT_LIST_DIR}
-)
-
-gtest_discover_tests(parser.test)
+create_test(parser.test libparser/parser.test.cpp parser nlohmann_json::nlohmann_json)

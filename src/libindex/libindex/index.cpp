@@ -20,9 +20,11 @@ void IndexBuilder::add_document(size_t document_id, const std::string& text) {
 
     for (size_t i = 0; i < ngrams.size(); ++i) {
         for (const auto& word : ngrams[i]) {
-            index_.entries_[word].insert(std::make_pair(document_id, i));
+            // index_.entries_[word].insert(std::make_pair(document_id, i));
+            index_.entries_[word][document_id].push_back(i);
         }
     }
+    ++index_.num_docs_;
 }
 
 Index IndexBuilder::index() const { return index_; }
@@ -40,7 +42,7 @@ bool create_dir(const fspath& path) {
 
 }  // namespace
 
-void TextIndexWriter::write(const fspath& path, const Index& index) {
+void TextIndexWriter::write(const fspath& path, const Index& index) const {
     const fspath index_path = path / "index";
     const fspath forward_index_path = index_path / "docs";
     const fspath reverse_index_path = index_path / "entries";
@@ -57,6 +59,9 @@ void TextIndexWriter::write(const fspath& path, const Index& index) {
     if (!write_reverse_index(reverse_index_path, index.entries_)) {
         std::cerr << "fts: index: error print reverse index." << '\n';
     }
+
+    std::ofstream total(path / "index" / "total");
+    total << index.num_docs_;
 }
 
 bool TextIndexWriter::write_forward_index(const fspath& path,
@@ -79,12 +84,13 @@ bool TextIndexWriter::write_forward_index(const fspath& path,
 bool TextIndexWriter::write_reverse_index(const fspath& path,
                                           const ReverseIndex& reverse_index) {
     for (const auto& [term, info] : reverse_index) {
-        std::ofstream out_file(path / name_to_hash(term));
+        std::ofstream out_file;
+        out_file.open(path / name_to_hash(term), std::ios_base::app);
         if (!out_file.is_open()) {
             return false;
         }
 
-        out_file << reverse_index_info_to_str(term, info);
+        out_file << reverse_index_info_to_str(term, info) << '\n';
 
         out_file.close();
     }
@@ -97,18 +103,12 @@ std::string TextIndexWriter::name_to_hash(const std::string& name) {
 }
 
 std::string TextIndexWriter::reverse_index_info_to_str(
-    const std::string& term, const std::multimap<size_t, size_t>& idx_info) {
-    using DocIdToSetIdxs = std::map<size_t, std::set<size_t>>;
-
-    DocIdToSetIdxs info;
-    for (const auto& [doc_id, pos] : idx_info) {
-        info[doc_id].insert(pos);
-    }
-
+    const std::string& term,
+    const std::map<size_t, std::vector<size_t>>& idx_info) {
     std::ostringstream reverse_index_str;
 
-    reverse_index_str << term << ' ' << info.size() << ' ';
-    for (const auto& [doc_id, idxs] : info) {
+    reverse_index_str << term << ' ' << idx_info.size() << ' ';
+    for (const auto& [doc_id, idxs] : idx_info) {
         reverse_index_str << doc_id << ' ' << idxs.size() << ' ';
         for (const auto& idx : idxs) {
             reverse_index_str << idx << ' ';

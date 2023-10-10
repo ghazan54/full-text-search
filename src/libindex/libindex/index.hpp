@@ -10,24 +10,26 @@
 namespace fts::index {
 
 using ForwardIndex = std::map<size_t, std::string>;
-using ReverseIndex = std::map<std::string, std::multimap<size_t, size_t>>;
+using ReverseIndex =
+    std::map<std::string, std::map<size_t, std::vector<size_t>>>;
 
 using fspath = std::filesystem::path;
 
 struct Index {
     ForwardIndex docs_;
     ReverseIndex entries_;
+    size_t num_docs_ = 0;
 };
 
 class IndexWriter {
    public:
-    virtual void write(const fspath& path, const Index& index) = 0;
+    virtual void write(const fspath& path, const Index& index) const = 0;
     virtual ~IndexWriter() = default;
 };
 
 class TextIndexWriter final : public IndexWriter {
    public:
-    void write(const fspath& path, const Index& index) final;
+    void write(const fspath& path, const Index& index) const final;
     static std::string name_to_hash(const std::string& name);
 
    private:
@@ -36,7 +38,8 @@ class TextIndexWriter final : public IndexWriter {
     static bool write_reverse_index(const fspath& path,
                                     const ReverseIndex& reverse_index);
     static std::string reverse_index_info_to_str(
-        const std::string& term, const std::multimap<size_t, size_t>& idx_info);
+        const std::string& term,
+        const std::map<size_t, std::vector<size_t>>& idx_info);
 };
 
 class IndexBuilder final {

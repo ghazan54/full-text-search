@@ -1,8 +1,8 @@
-set(target_name index)
+set(target_name searcher)
 
 add_library(${target_name} STATIC
-    libindex/index.cpp
-    libindex/index.hpp)
+    libsearcher/searcher.cpp
+    libsearcher/searcher.hpp)
 
 include(CompileOptions)
 set_compile_options(${target_name})
@@ -17,7 +17,8 @@ target_link_libraries(
     ${target_name}
     PUBLIC
     parser
-    picosha2
+    index
+    index_accessor
 )
 
-create_test(index.test libindex/index.test.cpp parser index)
+create_test(searcher.test libsearcher/searcher.test.cpp searcher)

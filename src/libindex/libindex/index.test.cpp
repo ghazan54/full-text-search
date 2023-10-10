@@ -3,17 +3,17 @@
 
 #include <gtest/gtest.h>
 
-fts::parser::ConfArgs conf = {
-    .stop_words_ = {"a",     "an",   "and",  "are", "as",    "at",   "be",
-                    "but",   "by",   "for",  "if",  "in",    "into", "is",
-                    "it",    "no",   "not",  "of",  "on",    "or",   "s",
-                    "such",  "t",    "that", "the", "their", "then", "there",
-                    "these", "they", "this", "to",  "was",   "will", "with"},
-    .ngram_min_length_ = 3,
-    .ngram_max_length_ = 6,
-};
-
 TEST(index_builder_test, normal_case) {
+    const fts::parser::ConfArgs conf = {
+        {"a",     "an",   "and",  "are", "as",    "at",   "be",
+         "but",   "by",   "for",  "if",  "in",    "into", "is",
+         "it",    "no",   "not",  "of",  "on",    "or",   "s",
+         "such",  "t",    "that", "the", "their", "then", "there",
+         "these", "they", "this", "to",  "was",   "will", "with"},
+        3,  // ngram_min_length_
+        6   // ngram_max_length_
+    };
+
     fts::index::Index index_exp;
     fts::index::IndexBuilder builder{conf};
 
@@ -25,18 +25,19 @@ TEST(index_builder_test, normal_case) {
                        {200305, "The Matrix Reloaded"},
                        {200311, "The Matrix Revolutions"}};
 
-    index_exp.entries_ = {{"mat", {{199903, 0}, {200305, 0}, {200311, 0}}},
-                          {"matr", {{199903, 0}, {200305, 0}, {200311, 0}}},
-                          {"matri", {{199903, 0}, {200305, 0}, {200311, 0}}},
-                          {"matrix", {{199903, 0}, {200305, 0}, {200311, 0}}},
-                          {"rel", {{200305, 1}}},
-                          {"relo", {{200305, 1}}},
-                          {"reloa", {{200305, 1}}},
-                          {"reload", {{200305, 1}}},
-                          {"rev", {{200311, 1}}},
-                          {"revo", {{200311, 1}}},
-                          {"revol", {{200311, 1}}},
-                          {"revolu", {{200311, 1}}}};
+    index_exp.entries_ = {
+        {"mat", {{199903, {0}}, {200305, {0}}, {200311, {0}}}},
+        {"matr", {{199903, {0}}, {200305, {0}}, {200311, {0}}}},
+        {"matri", {{199903, {0}}, {200305, {0}}, {200311, {0}}}},
+        {"matrix", {{199903, {0}}, {200305, {0}}, {200311, {0}}}},
+        {"rel", {{200305, {1}}}},
+        {"relo", {{200305, {1}}}},
+        {"reloa", {{200305, {1}}}},
+        {"reload", {{200305, {1}}}},
+        {"rev", {{200311, {1}}}},
+        {"revo", {{200311, {1}}}},
+        {"revol", {{200311, {1}}}},
+        {"revolu", {{200311, {1}}}}};
 
     ASSERT_EQ(builder.index().docs_, index_exp.docs_);
     ASSERT_EQ(builder.index().entries_, index_exp.entries_);
@@ -46,8 +47,18 @@ TEST(index_builder_test, normal_case) {
 }
 
 TEST(index_builder_test, empty_documents) {
+    const fts::parser::ConfArgs conf = {
+        {"a",     "an",   "and",  "are", "as",    "at",   "be",
+         "but",   "by",   "for",  "if",  "in",    "into", "is",
+         "it",    "no",   "not",  "of",  "on",    "or",   "s",
+         "such",  "t",    "that", "the", "their", "then", "there",
+         "these", "they", "this", "to",  "was",   "will", "with"},
+        3,  // ngram_min_length_
+        6   // ngram_max_length_
+    };
+
     fts::index::Index index_exp;
-    fts::index::IndexBuilder builder{conf};
+    const fts::index::IndexBuilder builder{conf};
 
     index_exp.docs_ = {};
 
@@ -61,6 +72,16 @@ TEST(index_builder_test, empty_documents) {
 }
 
 TEST(index_builder_test, only_stop_words) {
+    const fts::parser::ConfArgs conf = {
+        {"a",     "an",   "and",  "are", "as",    "at",   "be",
+         "but",   "by",   "for",  "if",  "in",    "into", "is",
+         "it",    "no",   "not",  "of",  "on",    "or",   "s",
+         "such",  "t",    "that", "the", "their", "then", "there",
+         "these", "they", "this", "to",  "was",   "will", "with"},
+        3,  // ngram_min_length_
+        6   // ngram_max_length_
+    };
+
     fts::index::Index index_exp;
     fts::index::IndexBuilder builder{conf};
 
@@ -80,6 +101,16 @@ TEST(index_builder_test, only_stop_words) {
 }
 
 TEST(index_builder_test, repeat_word) {
+    const fts::parser::ConfArgs conf = {
+        {"a",     "an",   "and",  "are", "as",    "at",   "be",
+         "but",   "by",   "for",  "if",  "in",    "into", "is",
+         "it",    "no",   "not",  "of",  "on",    "or",   "s",
+         "such",  "t",    "that", "the", "their", "then", "there",
+         "these", "they", "this", "to",  "was",   "will", "with"},
+        3,  // ngram_min_length_
+        6   // ngram_max_length_
+    };
+
     fts::index::Index index_exp;
     fts::index::IndexBuilder builder{conf};
 
@@ -87,10 +118,10 @@ TEST(index_builder_test, repeat_word) {
 
     index_exp.docs_ = {{1, "Matrix Matrix Matrix Matrix Matrix"}};
 
-    index_exp.entries_ = {{"mat", {{1, 0}, {1, 1}, {1, 2}, {1, 3}, {1, 4}}},
-                          {"matr", {{1, 0}, {1, 1}, {1, 2}, {1, 3}, {1, 4}}},
-                          {"matri", {{1, 0}, {1, 1}, {1, 2}, {1, 3}, {1, 4}}},
-                          {"matrix", {{1, 0}, {1, 1}, {1, 2}, {1, 3}, {1, 4}}}};
+    index_exp.entries_ = {{"mat", {{1, {0, 1, 2, 3, 4}}}},
+                          {"matr", {{1, {0, 1, 2, 3, 4}}}},
+                          {"matri", {{1, {0, 1, 2, 3, 4}}}},
+                          {"matrix", {{1, {0, 1, 2, 3, 4}}}}};
 
     ASSERT_EQ(builder.index().docs_, index_exp.docs_);
     ASSERT_EQ(builder.index().entries_, index_exp.entries_);

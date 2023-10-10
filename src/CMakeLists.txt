@@ -1,3 +1,5 @@
 add_subdirectory(app)
 add_subdirectory(libparser)
 add_subdirectory(libindex)
+add_subdirectory(libsearcher)
+add_subdirectory(libindexaccessor)
