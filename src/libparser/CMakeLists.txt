@@ -17,6 +17,7 @@ target_link_libraries(
     ${target_name}
     PRIVATE
     nlohmann_json::nlohmann_json
+    rapidcsv
 )
 
 create_test(parser.test libparser/parser.test.cpp parser nlohmann_json::nlohmann_json)

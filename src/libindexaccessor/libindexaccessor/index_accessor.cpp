@@ -48,7 +48,7 @@ index::ReverseIndex TextIndexAccessor::get_term_infos(const std::string& term) {
     return term_info;
 }
 
-std::string TextIndexAccessor::load_document(size_t document_id) {
+std::string TextIndexAccessor::load_document(size_t document_id) const {
     const std::string path(path_ / "index" / "docs" /
                            std::to_string(document_id));
     std::ifstream document(path);

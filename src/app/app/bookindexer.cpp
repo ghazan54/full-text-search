@@ -1,47 +1,40 @@
+#include <app/app.hpp>
+
 #include <libindex/index.hpp>
 #include <libparser/parser.hpp>
 
-#include <CLI/CLI.hpp>
-
 #include <iostream>
 
-int main(int argc, char* argv[]) {
-    try {
-        CLI::App app("fts");
+Indexer indexer_init(CLI::App& app) {
+    Indexer indexer;
 
-        std::string config_file("config.json");
-        app.add_option("--config", config_file, "First count");
+    indexer.indexer = app.add_subcommand("indexer", "Index documents");
 
-        CLI11_PARSE(app, argc, argv);
+    indexer.indexer->add_option("--config", indexer.config_path,
+                                "The path to the config");
 
-        auto conf_args = fts::parser::parse_config(config_file);
+    indexer.indexer
+        ->add_option("--csv", indexer.csv_path, "The path to the .csv file")
+        ->required();
 
-        fts::index::IndexBuilder builder(conf_args);
-        std::string text;
-        size_t doc_id = 0;
-        while ((std::cin >> doc_id >> std::ws) &&
-               std::getline(std::cin, text)) {
-            builder.add_document(doc_id, text);
-        }
-        auto index = builder.index();
-        // auto reverse_index = index.entries_;
+    indexer.indexer
+        ->add_option("--index", indexer.index_path,
+                     "Where will the index directory be located")
+        ->required();
 
-        // for (const auto& [term, info] : reverse_index) {
-        //     std::cout << term << " { ";
-        //     for (const auto& [doc_id, set_pos] : info) {
-        //         for (const auto& pos : set_pos) {
-        //             std::cout << doc_id << ": [" << pos << "], ";
-        //         }
-        //     }
-        //     std::cout << " }\n";
-        // }
+    return indexer;
+}
 
-        const fts::index::TextIndexWriter writer;
-        writer.write("./", index);
+void indexer_parse_and_write(const Indexer& indexer) {
+    auto config = fts::parser::parse_config(indexer.config_path);
+    auto books_info = fts::parser::parse_csv(indexer.csv_path);
+    fts::index::IndexBuilder builder(config);
 
-    } catch (const std::exception& e) {
-        std::cerr << e.what() << '\n';
+    for (const auto& row : books_info) {
+        builder.add_document(row.book_id, row.title);
     }
+    auto index = builder.index();
 
-    return 0;
+    fts::index::TextIndexWriter writer;
+    writer.write(indexer.index_path, index);
 }
