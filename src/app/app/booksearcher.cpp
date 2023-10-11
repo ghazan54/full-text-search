@@ -4,6 +4,8 @@
 #include <libparser/parser.hpp>
 #include <libsearcher/searcher.hpp>
 
+#include <replxx.hxx>
+
 #include <fstream>
 #include <iostream>
 
@@ -42,14 +44,23 @@ void searcher_search_and_print(const Searcher& searcher) {
 
     fts::index_accessor::TextIndexAccessor accessor(searcher.index_path,
                                                     conf_args);
+
     if (searcher.query.empty()) {
-        std::cout << "> ";
-        std::string query;
-        while (std::getline(std::cin, query)) {
-            std::cout << "\033[2J\033[1;1H";
+        const fts::parser::fspath temp_dir =
+            std::filesystem::temp_directory_path();
+        const fts::parser::fspath hist_path = temp_dir / "replxx.hist";
+        replxx::Replxx repl;
+        repl.history_save(hist_path);
+
+        while (true) {
+            const std::string query = repl.input("> ");
+            repl.clear_screen();
+            if (query.empty()) {
+                break;
+            }
             auto result = fts::searcher::search(query, accessor);
             searcher_print(result, accessor);
-            std::cout << "> ";
+            repl.history_add(query);
         }
     } else {
         auto result = fts::searcher::search(searcher.query, accessor);

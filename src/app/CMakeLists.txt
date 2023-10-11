@@ -23,8 +23,11 @@ target_link_libraries(
     ${target_name}
     PRIVATE
     CLI11
+    replxx
     parser
     index
     searcher
     index_accessor
 )
+
+install(TARGETS ${target_name} DESTINATION bin)
