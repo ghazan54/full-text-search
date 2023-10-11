@@ -25,13 +25,17 @@ Searcher searcher_init(CLI::App& app) {
     return searcher;
 }
 
-static void searcher_print(const fts::searcher::Results& result,
-                           const fts::index_accessor::IndexAccessor& accessor) {
+namespace {
+
+void searcher_print(const fts::searcher::Results& result,
+                    const fts::index_accessor::IndexAccessor& accessor) {
     for (const auto& [doc_id, rel] : result) {
         auto str = accessor.load_document(doc_id);
         std::cout << doc_id << ' ' << rel << ' ' << str << '\n';
     }
 }
+
+}  // namespace
 
 void searcher_search_and_print(const Searcher& searcher) {
     auto conf_args = fts::parser::parse_config(searcher.config_path);
