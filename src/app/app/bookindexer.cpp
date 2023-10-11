@@ -35,6 +35,6 @@ void indexer_parse_and_write(const Indexer& indexer) {
     }
     auto index = builder.index();
 
-    fts::index::TextIndexWriter writer;
+    const fts::index::TextIndexWriter writer;
     writer.write(indexer.index_path, index);
 }

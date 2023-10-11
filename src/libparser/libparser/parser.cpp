@@ -48,7 +48,7 @@ ConfArgs parse_config(const fspath& path) {
 }
 
 BooksInfo parse_csv(const fspath& path) {
-    rapidcsv::Document csv_file(path);
+    const rapidcsv::Document csv_file(path);
     BooksInfo books_info;
     std::vector<size_t> book_IDs = csv_file.GetColumn<size_t>("bookID");
     std::vector<std::string> titles = csv_file.GetColumn<std::string>("title");
@@ -57,7 +57,7 @@ BooksInfo parse_csv(const fspath& path) {
         throw std::runtime_error("Error reading csv file.");
     }
 
-    size_t rows = book_IDs.size();
+    const size_t rows = book_IDs.size();
     for (size_t i = 0; i < rows; ++i) {
         BookInfo book_info;
         book_info.book_id = book_IDs[i];
