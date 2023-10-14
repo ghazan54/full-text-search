@@ -18,6 +18,7 @@ target_link_libraries(
     PUBLIC
     parser
     picosha2
+    nlohmann_json::nlohmann_json
 )
 
 create_test(index.test libindex/index.test.cpp parser index)
