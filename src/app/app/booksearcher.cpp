@@ -9,8 +9,8 @@
 #include <fstream>
 #include <iostream>
 
-Searcher searcher_init(CLI::App& app) {
-    Searcher searcher;
+SearcherOptions searcher_init(CLI::App& app) {
+    SearcherOptions searcher;
 
     searcher.searcher =
         app.add_subcommand("searcher", "Search among indexed documents");
@@ -39,7 +39,7 @@ void searcher_print(const fts::searcher::Results& result,
 
 }  // namespace
 
-void searcher_search_and_print(const Searcher& searcher) {
+void searcher_search_and_print(const SearcherOptions& searcher) {
     auto conf_args = fts::parser::parse_config(searcher.config_path);
 
     fts::index_accessor::TextIndexAccessor accessor(searcher.index_path,

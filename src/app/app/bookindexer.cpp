@@ -5,8 +5,8 @@
 
 #include <iostream>
 
-Indexer indexer_init(CLI::App& app) {
-    Indexer indexer;
+IndexerOptions indexer_init(CLI::App& app) {
+    IndexerOptions indexer;
 
     indexer.indexer = app.add_subcommand("indexer", "Index documents");
 
@@ -25,7 +25,7 @@ Indexer indexer_init(CLI::App& app) {
     return indexer;
 }
 
-void indexer_parse_and_write(const Indexer& indexer) {
+void indexer_parse_and_write(const IndexerOptions& indexer) {
     auto config = fts::parser::parse_config(indexer.config_path);
     auto books_info = fts::parser::parse_csv(indexer.csv_path);
     fts::index::IndexBuilder builder(config);

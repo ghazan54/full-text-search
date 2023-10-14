@@ -101,18 +101,18 @@ Results search(const std::string& query,
                   return item1.second > item2.second;
               });
 
-    const double average =
-        std::accumulate(results.begin(), results.end(), 0.,
-                        [](double acc, const std::pair<size_t, double> item) {
-                            acc += item.second;
-                            return acc;
-                        }) /
-        static_cast<double>(results.size());
+    const double best_score =
+        std::max_element(results.begin(), results.end(),
+                         [](const std::pair<size_t, double> item1,
+                            const std::pair<size_t, double> item2) {
+                             return item1.second < item2.second;
+                         })
+            ->second;
 
     results.erase(
         std::remove_if(results.begin(), results.end(),
-                       [average](const std::pair<size_t, double> item) {
-                           return item.second < average;
+                       [best_score](const std::pair<size_t, double> item) {
+                           return item.second < best_score * 0.5;
                        }),
         results.end());
 
