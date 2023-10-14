@@ -13,7 +13,7 @@ typedef struct Results Results;
 //     char** stop_words_;
 // } C_Config;
 
-IndexAccessor* fts_create_handle();
+IndexAccessor* fts_create_handle(const char* path);
 void fts_delete_handle(IndexAccessor* accessor);
 Results* fts_search(const char* query, const IndexAccessor* accessor);
 void fts_print_result(const Results* res, const IndexAccessor* accessor);

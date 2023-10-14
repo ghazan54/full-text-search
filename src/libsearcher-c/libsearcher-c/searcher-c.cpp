@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-IndexAccessor* fts_create_handle() {
+IndexAccessor* fts_create_handle(const char* path) {
     fts::parser::ConfArgs conf;
     conf.ngram_min_length_ = 3;
     conf.ngram_max_length_ = 6;
@@ -16,7 +16,7 @@ IndexAccessor* fts_create_handle() {
 
     return reinterpret_cast<IndexAccessor*>(
         static_cast<fts::index_accessor::IndexAccessor*>(
-            new fts::index_accessor::TextIndexAccessor(".", conf)));
+            new fts::index_accessor::TextIndexAccessor(path, conf)));
 }
 
 void fts_delete_handle(IndexAccessor* accessor) {
