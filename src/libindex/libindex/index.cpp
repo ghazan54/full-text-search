@@ -1,6 +1,7 @@
 #include <libindex/index.hpp>
 #include <libparser/parser.hpp>
 
+#include <nlohmann/json.hpp>
 #include <picosha2.h>
 
 #include <map>
@@ -16,7 +17,7 @@ namespace fts::index {
 void IndexBuilder::add_document(size_t document_id, const std::string& text) {
     index_.docs_.insert(std::make_pair(document_id, text));
 
-    auto ngrams = parser::parse_ngram(text, conf_);
+    auto ngrams = parser::parse_ngram(text, index_.conf_);
 
     for (size_t i = 0; i < ngrams.size(); ++i) {
         for (const auto& word : ngrams[i]) {
@@ -62,6 +63,15 @@ void TextIndexWriter::write(const fspath& path, const Index& index) const {
 
     std::ofstream total(path / "index" / "total");
     total << index.num_docs_;
+
+    std::ofstream config_file(path / "index" / "config.json");
+    nlohmann::json config_data;
+    config_data["fts"]["parser"]["ngram_min_length"] =
+        index.conf_.ngram_min_length_;
+    config_data["fts"]["parser"]["ngram_max_length"] =
+        index.conf_.ngram_max_length_;
+    config_data["fts"]["parser"]["stop_words"] = index.conf_.stop_words_;
+    config_file << config_data;
 }
 
 bool TextIndexWriter::write_forward_index(const fspath& path,

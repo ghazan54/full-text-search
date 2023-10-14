@@ -5,18 +5,9 @@
 #include <iostream>
 
 IndexAccessor* fts_create_handle(const char* path) {
-    fts::parser::ConfArgs conf;
-    conf.ngram_min_length_ = 3;
-    conf.ngram_max_length_ = 6;
-    conf.stop_words_ = {
-        "a",     "an",    "and",  "are",  "as", "at",   "be",   "but",   "by",
-        "for",   "if",    "in",   "into", "is", "it",   "no",   "not",   "of",
-        "on",    "or",    "s",    "such", "t",  "that", "the",  "their", "then",
-        "there", "these", "they", "this", "to", "was",  "will", "with"};
-
     return reinterpret_cast<IndexAccessor*>(
         static_cast<fts::index_accessor::IndexAccessor*>(
-            new fts::index_accessor::TextIndexAccessor(path, conf)));
+            new fts::index_accessor::TextIndexAccessor(path)));
 }
 
 void fts_delete_handle(IndexAccessor* accessor) {

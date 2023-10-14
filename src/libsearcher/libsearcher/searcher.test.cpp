@@ -45,7 +45,7 @@ TEST(search_test, normal_case) {
         6   // ngram_max_length_
     };
 
-    fts::index_accessor::TextIndexAccessor t_accs("./", conf);
+    fts::index_accessor::TextIndexAccessor t_accs("./");
     auto result = fts::searcher::search("bye earth", t_accs);
 
     // fts::searcher::Results exp_result({{102, 3.29584}, {101, 1.09861}});
@@ -70,7 +70,7 @@ TEST(search_test, one_word) {
         6   // ngram_max_length_
     };
 
-    fts::index_accessor::TextIndexAccessor t_accs("./", conf);
+    fts::index_accessor::TextIndexAccessor t_accs("./");
     auto result = fts::searcher::search("hello", t_accs);
     fts::searcher::Results exp_result({{100, 1.2164}, {102, 1.2164}});
 
@@ -93,7 +93,7 @@ TEST(search_test, empty_query) {
         6   // ngram_max_length_
     };
 
-    fts::index_accessor::TextIndexAccessor t_accs("./", conf);
+    fts::index_accessor::TextIndexAccessor t_accs("./");
     auto result = fts::searcher::search("", t_accs);
     fts::searcher::Results exp_result{};
 

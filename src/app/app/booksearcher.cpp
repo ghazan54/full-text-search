@@ -42,8 +42,7 @@ void searcher_print(const fts::searcher::Results& result,
 void searcher_search_and_print(const SearcherOptions& searcher) {
     auto conf_args = fts::parser::parse_config(searcher.config_path);
 
-    fts::index_accessor::TextIndexAccessor accessor(searcher.index_path,
-                                                    conf_args);
+    fts::index_accessor::TextIndexAccessor accessor(searcher.index_path);
 
     if (searcher.query.empty()) {
         const fts::parser::fspath temp_dir =

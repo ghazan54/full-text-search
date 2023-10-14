@@ -18,6 +18,7 @@ using fspath = std::filesystem::path;
 struct Index {
     ForwardIndex docs_;
     ReverseIndex entries_;
+    parser::ConfArgs conf_;
     size_t num_docs_ = 0;
 };
 
@@ -44,13 +45,14 @@ class TextIndexWriter final : public IndexWriter {
 
 class IndexBuilder final {
    public:
-    explicit IndexBuilder(parser::ConfArgs args) : conf_(std::move(args)) {}
+    explicit IndexBuilder(parser::ConfArgs args) {
+        index_.conf_ = std::move(args);
+    }
     void add_document(size_t document_id, const std::string& text);
     Index index() const;
 
    private:
     Index index_;
-    parser::ConfArgs conf_;
 };
 
 }  // namespace fts::index
