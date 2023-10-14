@@ -19,7 +19,15 @@ struct ConfArgs {
 
 using NgramVec = std::vector<std::vector<std::string>>;
 
-ConfArgs parse_config(const fspath& path);  // filesystem::path
+struct BookInfo {
+    size_t book_id = 0;
+    std::string title;
+};
+
+using BooksInfo = std::vector<BookInfo>;
+
+ConfArgs parse_config(const fspath& path);
+BooksInfo parse_csv(const fspath& path);
 NgramVec parse_ngram(std::string str, const ConfArgs& args);
 
 }  // namespace fts::parser

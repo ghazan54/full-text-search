@@ -37,7 +37,7 @@ TEST(index_accessor_load_document_test, normal_case) {
         6   // ngram_max_length_
     };
 
-    fts::index_accessor::TextIndexAccessor accessor("./", conf);
+    const fts::index_accessor::TextIndexAccessor accessor("./", conf);
     {
         const auto result = accessor.load_document(199903);
         const std::string exp_result("The Matrix");
@@ -67,8 +67,8 @@ TEST(index_accessor_load_document_test, empty_dir) {
         6   // ngram_max_length_
     };
 
-    fts::index_accessor::TextIndexAccessor accessor("non-existent directory",
-                                                    conf);
+    const fts::index_accessor::TextIndexAccessor accessor(
+        "non-existent directory", conf);
 
     bool result = false;
 

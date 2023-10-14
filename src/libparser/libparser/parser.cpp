@@ -1,6 +1,7 @@
 #include <libparser/parser.hpp>
 
 #include <nlohmann/json.hpp>
+#include <rapidcsv.h>
 
 #include <algorithm>
 #include <fstream>
@@ -13,17 +14,17 @@ using VecWords = std::vector<std::string>;
 
 ConfArgs parse_config(const fspath& path) {
     ConfArgs conf;
-    std::ifstream fconf(path);
-
-    if (!fconf.is_open()) {
-        return conf;
-    }
-
-    nlohmann::json data;
-    fconf >> data;
-    fconf.close();
 
     try {
+        std::ifstream fconf(path);
+        if (!fconf.is_open()) {
+            throw std::ios_base::failure("Could not open the config");
+        }
+
+        nlohmann::json data;
+        fconf >> data;
+        fconf.close();
+
         conf.ngram_min_length_ = data["fts"]["parser"]["ngram_min_length"];
         conf.ngram_max_length_ = data["fts"]["parser"]["ngram_max_length"];
         std::copy(data["fts"]["parser"]["stop_words"].begin(),
@@ -44,6 +45,27 @@ ConfArgs parse_config(const fspath& path) {
     }
 
     return conf;
+}
+
+BooksInfo parse_csv(const fspath& path) {
+    const rapidcsv::Document csv_file(path);
+    BooksInfo books_info;
+    std::vector<size_t> book_IDs = csv_file.GetColumn<size_t>("bookID");
+    std::vector<std::string> titles = csv_file.GetColumn<std::string>("title");
+
+    if (book_IDs.size() != titles.size()) {
+        throw std::runtime_error("Error reading csv file.");
+    }
+
+    const size_t rows = book_IDs.size();
+    for (size_t i = 0; i < rows; ++i) {
+        BookInfo book_info;
+        book_info.book_id = book_IDs[i];
+        book_info.title = std::move(titles[i]);
+        books_info.push_back(book_info);
+    }
+
+    return books_info;
 }
 
 namespace {

@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <numeric>
 
 namespace fts::searcher {
 
@@ -99,6 +100,21 @@ Results search(const std::string& query,
                  const std::pair<size_t, double> item2) {
                   return item1.second > item2.second;
               });
+
+    const double average =
+        std::accumulate(results.begin(), results.end(), 0.,
+                        [](double acc, const std::pair<size_t, double> item) {
+                            acc += item.second;
+                            return acc;
+                        }) /
+        static_cast<double>(results.size());
+
+    results.erase(
+        std::remove_if(results.begin(), results.end(),
+                       [average](const std::pair<size_t, double> item) {
+                           return item.second < average;
+                       }),
+        results.end());
 
     return results;
 }
