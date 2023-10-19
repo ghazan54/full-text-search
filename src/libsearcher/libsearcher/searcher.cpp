@@ -93,29 +93,26 @@ Results search(const std::string& query,
 
     for (const auto doc_id : docs_id) {
         const double rel = score(ngrams, doc_id, index_accessor);
-        results.emplace_back(doc_id, rel);
+        results.push_back({doc_id, rel});
     }
     std::sort(results.begin(), results.end(),
-              [](const std::pair<size_t, double> item1,
-                 const std::pair<size_t, double> item2) {
-                  return item1.second > item2.second;
+              [](const Result item1, const Result item2) {
+                  return item1.score > item2.score;
               });
 
     const auto best_score_iter =
         std::max_element(results.begin(), results.end(),
-                         [](const std::pair<size_t, double> item1,
-                            const std::pair<size_t, double> item2) {
-                             return item1.second < item2.second;
+                         [](const Result item1, const Result item2) {
+                             return item1.score < item2.score;
                          });
 
     if (best_score_iter != results.end()) {
-        const double best_score = best_score_iter->second;
-        results.erase(
-            std::remove_if(results.begin(), results.end(),
-                           [best_score](const std::pair<size_t, double> item) {
-                               return item.second < best_score * 0.5;
-                           }),
-            results.end());
+        const double best_score = best_score_iter->score;
+        results.erase(std::remove_if(results.begin(), results.end(),
+                                     [best_score](const Result item) {
+                                         return item.score < best_score * 0.5;
+                                     }),
+                      results.end());
     }
 
     return results;

@@ -12,7 +12,12 @@
 
 namespace fts::searcher {
 
-using Results = std::vector<std::pair<size_t, double>>;
+struct Result {
+    size_t doc_id;
+    double score;
+};
+
+using Results = std::vector<Result>;
 
 Results search(const std::string& query,
                index_accessor::IndexAccessor& index_accessor);

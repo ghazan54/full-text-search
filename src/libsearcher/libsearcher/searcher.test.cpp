@@ -54,8 +54,8 @@ TEST(search_test, normal_case) {
     ASSERT_EQ(exp_result.size(), result.size());
 
     for (size_t i = 0; i < exp_result.size(); ++i) {
-        ASSERT_DOUBLE_EQ(accuracy(exp_result[i].second),
-                         accuracy(result[i].second));
+        ASSERT_DOUBLE_EQ(accuracy(exp_result[i].score),
+                         accuracy(result[i].score));
     }
 }
 
@@ -77,8 +77,8 @@ TEST(search_test, one_word) {
     ASSERT_EQ(exp_result.size(), result.size());
 
     for (size_t i = 0; i < exp_result.size(); ++i) {
-        ASSERT_DOUBLE_EQ(accuracy(exp_result[i].second),
-                         accuracy(result[i].second));
+        ASSERT_DOUBLE_EQ(accuracy(exp_result[i].score),
+                         accuracy(result[i].score));
     }
 }
 
@@ -100,8 +100,8 @@ TEST(search_test, empty_query) {
     ASSERT_EQ(exp_result.size(), result.size());
 
     for (size_t i = 0; i < exp_result.size(); ++i) {
-        ASSERT_DOUBLE_EQ(accuracy(exp_result[i].second),
-                         accuracy(result[i].second));
+        ASSERT_DOUBLE_EQ(accuracy(exp_result[i].score),
+                         accuracy(result[i].score));
     }
 }
 

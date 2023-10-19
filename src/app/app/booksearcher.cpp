@@ -19,8 +19,7 @@ SearcherOptions searcher_init(CLI::App& app) {
         ->add_option("--index", searcher.index_path,
                      "Where will the index directory be taken from")
         ->required();
-    searcher.searcher->add_option("--config", searcher.config_path,
-                                  "The path to the config");
+
     searcher.searcher->add_option("--query", searcher.query,
                                   "Query for searcher");
 
@@ -40,8 +39,6 @@ void searcher_print(const fts::searcher::Results& result,
 }  // namespace
 
 void searcher_search_and_print(const SearcherOptions& searcher) {
-    auto conf_args = fts::parser::parse_config(searcher.config_path);
-
     fts::index_accessor::TextIndexAccessor accessor(searcher.index_path);
 
     if (searcher.query.empty()) {

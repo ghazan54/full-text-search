@@ -10,7 +10,6 @@ struct IndexerOptions {
 };
 
 struct SearcherOptions {
-    std::string config_path = "config.json";
     std::string index_path;
     std::string query;
     CLI::App* searcher;
