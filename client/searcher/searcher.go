@@ -30,24 +30,20 @@ func InteractiveMode(indexPath string, accessor *C.IndexAccessor) {
 	line := liner.NewLiner()
 	defer line.Close()
 
-	line.SetCtrlCAborts(true)
+	line.SetCtrlCAborts(false)
 
 	for {
 		input, err := line.Prompt("> ")
 		if err != nil {
-			if err == liner.ErrPromptAborted {
-				fmt.Println("Aborted")
-			} else {
-				fmt.Println("Error reading line:", err)
-			}
+			fmt.Println(err)
 			break
 		}
-
-		Cls()
 
 		if input == "" {
 			break
 		}
+
+		cls()
 
 		SearchAndPrint(indexPath, input, accessor)
 
@@ -55,7 +51,7 @@ func InteractiveMode(indexPath string, accessor *C.IndexAccessor) {
 	}
 }
 
-func Cls() {
+func cls() {
 	cmd := exec.Command("clear")
 	cmd.Stdout = os.Stdout
 	cmd.Run()

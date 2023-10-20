@@ -12,6 +12,11 @@ func main() {
 	readFlags(&indexPath, &query)
 
 	accessor := searcher.NewHandle(indexPath)
+
+	if accessor == nil {
+		panic("accessor == nil")
+	}
+
 	defer searcher.DeleteHandle(accessor)
 
 	if query == "" {
