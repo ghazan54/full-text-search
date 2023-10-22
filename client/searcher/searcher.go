@@ -1,7 +1,5 @@
 package searcher
 
-// #cgo CFLAGS: -I./../../src/libsearcher-c/
-// #cgo LDFLAGS: -L./../../build/release/src/libsearcher-c/ -lsearcher-c -Wl,-rpath,./../../build/release/src/libsearcher-c/
 // #include <libsearcher-c/searcher-c.h>
 import "C"
 

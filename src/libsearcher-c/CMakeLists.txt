@@ -18,3 +18,11 @@ target_link_libraries(
     PRIVATE
     searcher
 )
+
+add_custom_target(
+    run_make_build
+    COMMAND make build include_path=${CMAKE_CURRENT_LIST_DIR} slib_path=$<TARGET_FILE_DIR:${target_name}> libname=${target_name}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/client
+)
+
+add_dependencies(${target_name} run_make_build)
