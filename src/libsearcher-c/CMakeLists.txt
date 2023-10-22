@@ -19,10 +19,9 @@ target_link_libraries(
     searcher
 )
 
-add_custom_target(
-    run_make_build
+add_custom_command(
+    TARGET ${target_name}
     COMMAND make build include_path=${CMAKE_CURRENT_LIST_DIR} slib_path=$<TARGET_FILE_DIR:${target_name}> libname=${target_name}
+    DEPENDS ${CMAKE_SOURCE_DIR}/client/cmd/main.go ${CMAKE_SOURCE_DIR}/client/searcher/searcher.go
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/client
 )
-
-add_dependencies(${target_name} run_make_build)

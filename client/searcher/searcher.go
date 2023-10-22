@@ -19,9 +19,21 @@ func DeleteHandle(accessor *C.IndexAccessor) {
 	C.fts_delete_handle(accessor)
 }
 
+func printResults(result *C.Results, accessor *C.IndexAccessor) {
+	for i := C.size_t(0); i < C.fts_get_results_size(result); i++ {
+		row := C.fts_get_row_info(result, i, accessor)
+		fmt.Printf("%d %.2f %s\n", row.doc_id, row.score, C.GoString(row.str))
+	}
+}
+
 func SearchAndPrint(indexPath, query string, accessor *C.IndexAccessor) {
-	res := C.fts_search(C.CString(query), accessor)
-	C.fts_print_result(res, accessor)
+	result := C.fts_search(C.CString(query), accessor)
+	if result == nil {
+		panic("result == nil")
+	}
+	defer C.fts_delete_results(result)
+	// C.fts_print_result(result, accessor)
+	printResults(result, accessor)
 }
 
 func InteractiveMode(indexPath string, accessor *C.IndexAccessor) {

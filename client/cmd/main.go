@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"os"
 
 	"git.csc.sibsutis.ru/cpp2023/fts-kokorin-iv121s13/searcher"
 )
@@ -34,6 +36,7 @@ func readFlags(indexPath, query *string) {
 	flag.Parse()
 
 	if *indexPath == "" {
-		panic("--index is required\nRun with --help for more information.")
+		fmt.Println("--index is required\nRun with --help for more information.")
+		os.Exit(1)
 	}
 }
