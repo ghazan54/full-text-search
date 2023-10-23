@@ -20,8 +20,14 @@ target_link_libraries(
 )
 
 add_custom_command(
-    TARGET ${target_name}
+    OUTPUT ${CMAKE_SOURCE_DIR}/client/fts
     COMMAND make build include_path=${CMAKE_CURRENT_LIST_DIR} slib_path=$<TARGET_FILE_DIR:${target_name}> libname=${target_name}
     DEPENDS ${CMAKE_SOURCE_DIR}/client/cmd/main.go ${CMAKE_SOURCE_DIR}/client/searcher/searcher.go
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/client
+)
+
+add_custom_target(
+    build_fts
+    ALL
+    DEPENDS ${target_name} ${CMAKE_SOURCE_DIR}/client/fts
 )
