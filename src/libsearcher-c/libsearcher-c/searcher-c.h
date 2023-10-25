@@ -1,9 +1,9 @@
+#pragma once
+
 /**
  * @file index_accessor.h
  * @brief C API for accessing the index and performing searches.
  */
-
-#pragma once
 
 #ifdef __cplusplus
 extern "C" {
