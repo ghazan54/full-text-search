@@ -15,6 +15,13 @@ namespace fts::searcher {
 
 namespace {
 
+/**
+ * @brief Calculates the term frequency in a specific document.
+ * @param term The term to calculate frequency for.
+ * @param document_id The ID of the document.
+ * @param info The reverse index containing term information.
+ * @return The frequency of the term in the document.
+ */
 size_t term_frequency(const std::string& term, size_t document_id,
                       index::ReverseIndex& info) {
     auto term_info = info.find(term);
@@ -28,6 +35,12 @@ size_t term_frequency(const std::string& term, size_t document_id,
     return documnet_info->second.size();
 }
 
+/**
+ * @brief Calculates the document frequency of a term in the index.
+ * @param term The term to calculate frequency for.
+ * @param info The reverse index containing term information.
+ * @return The document frequency of the term.
+ */
 size_t document_frequency(const std::string& term, index::ReverseIndex& info) {
     std::set<size_t> docs;
 
@@ -42,6 +55,12 @@ size_t document_frequency(const std::string& term, index::ReverseIndex& info) {
     return docs.size();
 }
 
+/**
+ * @brief Retrieves the set of document IDs containing any of the given ngrams.
+ * @param index_accessor An IndexAccessor object providing access to the index.
+ * @param ngrams A vector of ngrams.
+ * @return A set of document IDs.
+ */
 std::set<size_t> get_num_docs(index_accessor::IndexAccessor& index_accessor,
                               parser::NgramVec& ngrams) {
     std::set<size_t> docs;
@@ -62,6 +81,13 @@ std::set<size_t> get_num_docs(index_accessor::IndexAccessor& index_accessor,
     return docs;
 }
 
+/**
+ * @brief Calculates the relevance score of a document based on ngrams.
+ * @param ngrams A vector of ngrams.
+ * @param doc_id The ID of the document.
+ * @param index_accessor An IndexAccessor object providing access to the index.
+ * @return The relevance score of the document.
+ */
 double score(parser::NgramVec& ngrams, size_t doc_id,
              index_accessor::IndexAccessor& index_accessor) {
     double rel = 0.;
@@ -93,28 +119,27 @@ Results search(const std::string& query,
 
     for (const auto doc_id : docs_id) {
         const double rel = score(ngrams, doc_id, index_accessor);
-        results.emplace_back(doc_id, rel);
+        results.push_back({doc_id, rel});
     }
     std::sort(results.begin(), results.end(),
-              [](const std::pair<size_t, double> item1,
-                 const std::pair<size_t, double> item2) {
-                  return item1.second > item2.second;
+              [](const Result item1, const Result item2) {
+                  return item1.score > item2.score;
               });
 
-    const double average =
-        std::accumulate(results.begin(), results.end(), 0.,
-                        [](double acc, const std::pair<size_t, double> item) {
-                            acc += item.second;
-                            return acc;
-                        }) /
-        static_cast<double>(results.size());
+    const auto best_score_iter =
+        std::max_element(results.begin(), results.end(),
+                         [](const Result item1, const Result item2) {
+                             return item1.score < item2.score;
+                         });
 
-    results.erase(
-        std::remove_if(results.begin(), results.end(),
-                       [average](const std::pair<size_t, double> item) {
-                           return item.second < average;
-                       }),
-        results.end());
+    if (best_score_iter != results.end()) {
+        const double best_score = best_score_iter->score;
+        results.erase(std::remove_if(results.begin(), results.end(),
+                                     [best_score](const Result item) {
+                                         return item.score < best_score * 0.5;
+                                     }),
+                      results.end());
+    }
 
     return results;
 }

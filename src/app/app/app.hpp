@@ -2,22 +2,21 @@
 
 #include <CLI/CLI.hpp>
 
-struct Indexer {
+struct IndexerOptions {
     std::string config_path = "config.json";
     std::string csv_path;
     std::string index_path;
-    CLI::App* indexer;
+    CLI::App* indexer = nullptr;
 };
 
-struct Searcher {
-    std::string config_path = "config.json";
+struct SearcherOptions {
     std::string index_path;
     std::string query;
-    CLI::App* searcher;
+    CLI::App* searcher = nullptr;
 };
 
-Indexer indexer_init(CLI::App& app);
-void indexer_parse_and_write(const Indexer& indexer);
+IndexerOptions indexer_init(CLI::App& app);
+void indexer_parse_and_write(const IndexerOptions& indexer);
 
-Searcher searcher_init(CLI::App& app);
-void searcher_search_and_print(const Searcher& searcher);
+SearcherOptions searcher_init(CLI::App& app);
+void searcher_search_and_print(const SearcherOptions& searcher);

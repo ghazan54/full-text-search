@@ -8,7 +8,8 @@
 
 namespace fts::index_accessor {
 
-index::ReverseIndex TextIndexAccessor::get_term_infos(const std::string& term) {
+index::ReverseIndex TextIndexAccessor::get_term_infos(
+    const std::string& term) const {
     const std::string path(path_ / "index/entries" /
                            index::TextIndexWriter::name_to_hash(term));
     std::ifstream entry_file(path);
