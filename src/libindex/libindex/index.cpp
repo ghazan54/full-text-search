@@ -32,6 +32,17 @@ Index IndexBuilder::index() const { return index_; }
 
 namespace {
 
+/**
+ * Creates a directory at the specified path if it does not already exist.
+ *
+ * @param path The path of the directory to be created.
+ *
+ * @return `true` if the directory is created successfully or already exists,
+ * `false` otherwise.
+ *
+ * @throws std::filesystem::filesystem_error If an error occurs while creating
+ * the directory.
+ */
 bool create_dir(const fspath& path) {
     if (!std::filesystem::exists(path)) {
         if (!std::filesystem::create_directory(path)) {

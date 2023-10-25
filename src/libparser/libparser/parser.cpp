@@ -70,18 +70,32 @@ BooksInfo parse_csv(const fspath& path) {
 
 namespace {
 
+/**
+ * @brief Removes punctuation characters from the input string.
+ * @param str Input string to be modified.
+ */
 void remove_puncts(std::string& str) {
     str.erase(std::remove_if(str.begin(), str.end(),
                              [](char chr) { return std::ispunct(chr); }),
               str.end());
 }
 
+/**
+ * @brief Converts all characters in the input string to lowercase.
+ * @param str Input string to be modified.
+ */
 void tolower_str(std::string& str) {
     std::transform(str.begin(), str.end(), str.begin(), [](const char chr) {
         return static_cast<char>(tolower(chr));
     });
 }
 
+/**
+ * @brief Removes words from the input vector that are shorter than a specified
+ * length.
+ * @param words Vector of words.
+ * @param min_len Minimum length for a word to be kept.
+ */
 void remove_short_words(VecWords& words, size_t min_len) {
     words.erase(std::remove_if(words.begin(), words.end(),
                                [&min_len](const std::string& str) {
@@ -90,6 +104,14 @@ void remove_short_words(VecWords& words, size_t min_len) {
                 words.end());
 }
 
+/**
+ * @brief Removes stop words from the input string and returns a vector of valid
+ * words.
+ * @param str Input string containing words.
+ * @param stop_words Set of stop words.
+ * @param min_len_word Minimum length for a valid word.
+ * @return Vector of valid words.
+ */
 VecWords remove_stop_words(std::string& str, const StopWordsSet& stop_words,
                            size_t min_len_word) {
     VecWords words;
@@ -106,6 +128,7 @@ VecWords remove_stop_words(std::string& str, const StopWordsSet& stop_words,
 
     return words;
 }
+
 }  // namespace
 
 NgramVec parse_ngram(std::string str, const ConfArgs& args) {
